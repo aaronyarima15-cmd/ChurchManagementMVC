@@ -1,0 +1,488 @@
+﻿@model List<ChurchManagementMVC.Models.ExpenditureManagement>
+
+@{
+    ViewData["Title"] = "Expenditures";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-wallet2 me-2"></i>
+                Expenditures
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage and track church expenditures.
+            </p>
+        </div>
+
+        <div>
+            <a asp-action="Create"
+               class="btn btn-success rounded-3 px-4 shadow-sm">
+
+                <i class="bi bi-plus-circle-fill me-2"></i>
+                Add Expenditure
+
+            </a>
+        </div>
+
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 shadow-sm"
+             role="alert">
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            @TempData["Success"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    <!-- ERROR MESSAGE -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show border-0 rounded-3 shadow-sm"
+             role="alert">
+
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+            @TempData["Error"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    <!-- EXPENDITURE TABLE -->
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body p-0">
+
+            @if (Model == null || !Model.Any())
+            {
+                <!-- EMPTY STATE -->
+                <div class="text-center py-5">
+
+                    <div class="mb-3">
+                        <i class="bi bi-wallet2 display-4 text-muted"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        No Expenditures Found
+                    </h5>
+
+                    <p class="text-muted mb-4">
+                        No expenditure records have been added yet.
+                    </p>
+
+                    <a asp-action="Create"
+                       class="btn btn-success rounded-3 px-4">
+
+                        <i class="bi bi-plus-circle-fill me-2"></i>
+                        Add First Expenditure
+
+                    </a>
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="ps-4">
+                                    #
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    Description
+                                </th>
+
+                                <th>
+                                    Payee
+                                </th>
+
+                                <th>
+                                    Payment Method
+                                </th>
+
+                                <th>
+                                    Amount
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end pe-4">
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @{
+                                int count = 1;
+                            }
+
+                            @foreach (var expenditure in Model)
+                            {
+                                <tr>
+
+                                    <!-- NUMBER -->
+                                    <td class="ps-4 fw-semibold text-muted">
+                                        @count
+                                    </td>
+
+                                    <!-- DATE -->
+                                    <td>
+                                        <span class="text-muted">
+
+                                            <i class="bi bi-calendar3 me-2"></i>
+
+                                            @expenditure.ExpenditureDate.ToString("dd MMM yyyy")
+
+                                        </span>
+                                    </td>
+
+                                    <!-- TYPE -->
+                                    <td>
+                                        <span class="badge bg-primary bg-opacity-10
+                                            text-primary rounded-pill px-3 py-2">
+
+                                            <i class="bi bi-tags-fill me-1"></i>
+
+                                            @expenditure.ExpenditureTypeName
+
+                                        </span>
+                                    </td>
+
+                                    <!-- DESCRIPTION -->
+                                    <td>
+
+                                        <div class="fw-semibold">
+                                            @expenditure.Description
+                                        </div>
+
+                                        @if (!string.IsNullOrWhiteSpace(expenditure.ReferenceNumber))
+                                        {
+                                            <small class="text-muted">
+
+                                                <i class="bi bi-receipt me-1"></i>
+                                                Ref: @expenditure.ReferenceNumber
+
+                                            </small>
+                                        }
+
+                                    </td>
+
+                                    <!-- PAYEE -->
+                                    <td>
+
+                                        @if (string.IsNullOrWhiteSpace(expenditure.PayeeName))
+                                        {
+                                            <span class="text-muted">
+                                                -
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center">
+
+                                                <div class="bg-success bg-opacity-10
+                                                    text-success rounded-circle
+                                                    d-flex align-items-center
+                                                    justify-content-center me-2"
+                                                     style="width:36px;height:36px;">
+
+                                                    <i class="bi bi-person-fill"></i>
+
+                                                </div>
+
+                                                <span class="fw-semibold">
+                                                    @expenditure.PayeeName
+                                                </span>
+
+                                            </div>
+                                        }
+
+                                    </td>
+
+                                    <!-- PAYMENT METHOD -->
+                                    <td>
+
+                                        <span class="text-muted">
+
+                                            <i class="bi bi-credit-card me-2"></i>
+
+                                            @expenditure.PaymentMethodName
+
+                                        </span>
+
+                                    </td>
+
+                                    <!-- AMOUNT -->
+                                    <td>
+
+                                        <span class="fw-bold">
+                                            ₦@expenditure.Amount.ToString("N2")
+                                        </span>
+
+                                    </td>
+
+                                    <!-- STATUS -->
+                                    <td>
+
+                                        @if (expenditure.Status == "Approved")
+                                        {
+                                            <span class="badge bg-success bg-opacity-10
+                                                text-success rounded-pill px-3 py-2">
+
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+                                                Approved
+
+                                            </span>
+                                        }
+                                        else if (expenditure.Status == "Rejected")
+                                        {
+                                            <span class="badge bg-danger bg-opacity-10
+                                                text-danger rounded-pill px-3 py-2">
+
+                                                <i class="bi bi-x-circle-fill me-1"></i>
+                                                Rejected
+
+                                            </span>
+                                        }
+                                        else if (expenditure.Status == "Paid")
+                                        {
+                                            <span class="badge bg-primary bg-opacity-10
+                                                text-primary rounded-pill px-3 py-2">
+
+                                                <i class="bi bi-cash-stack me-1"></i>
+                                                Paid
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning bg-opacity-10
+                                                text-warning-emphasis rounded-pill px-3 py-2">
+
+                                                <i class="bi bi-clock-fill me-1"></i>
+                                                Pending
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <!-- ACTIONS -->
+                                    <td class="text-end pe-4">
+
+                                        <div class="d-flex justify-content-end gap-2">
+
+                                            <!-- EDIT -->
+                                            <a asp-action="Edit"
+                                               asp-route-id="@expenditure.ExpenditureId"
+                                               class="btn btn-sm btn-outline-success rounded-3 px-3"
+                                               title="Edit Expenditure">
+
+                                                <i class="bi bi-pencil-square me-1"></i>
+                                                Edit
+
+                                            </a>
+
+                                            <!-- DELETE -->
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger rounded-3 px-3"
+                                                    title="Delete Expenditure"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    data-id="@expenditure.ExpenditureId"
+                                                    data-description="@expenditure.Description"
+                                                    onclick="setDeleteDetails(this)">
+
+                                                <i class="bi bi-trash3 me-1"></i>
+                                                Delete
+
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                count++;
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow rounded-4">
+
+            <!-- MODAL HEADER -->
+            <div class="modal-header border-0">
+
+                <h5 class="modal-title text-danger fw-bold"
+                    id="deleteModalLabel">
+
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Delete Expenditure
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <!-- MODAL BODY -->
+            <div class="modal-body">
+
+                <p>
+                    Are you sure you want to delete this expenditure?
+                </p>
+
+                <div class="alert alert-light border rounded-3">
+
+                    <div class="d-flex">
+
+                        <i class="bi bi-receipt me-2 mt-1"></i>
+
+                        <div>
+
+                            <strong>
+                                Description:
+                            </strong>
+
+                            <div id="deleteDescription"
+                                 class="text-muted mt-1">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <p class="text-muted small mb-0">
+
+                    <i class="bi bi-info-circle me-1"></i>
+
+                    This action cannot be undone.
+
+                </p>
+
+            </div>
+
+            <!-- MODAL FOOTER -->
+            <div class="modal-footer border-0">
+
+                <button type="button"
+                        class="btn btn-outline-secondary rounded-3 px-4"
+                        data-bs-dismiss="modal">
+
+                    <i class="bi bi-x-circle me-1"></i>
+                    Cancel
+
+                </button>
+
+                <form asp-action="Delete"
+                      method="post"
+                      class="d-inline">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="id"
+                           id="deleteId" />
+
+                    <button type="submit"
+                            class="btn btn-danger rounded-3 px-4">
+
+                        <i class="bi bi-trash3 me-1"></i>
+                        Yes, Delete
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function setDeleteDetails(button) {
+
+        const id = button.getAttribute("data-id");
+
+        const description =
+            button.getAttribute("data-description");
+
+        document.getElementById("deleteId").value = id;
+
+        document.getElementById("deleteDescription").textContent =
+            description;
+        }
+
+</script>

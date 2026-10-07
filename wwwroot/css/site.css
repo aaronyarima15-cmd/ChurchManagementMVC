@@ -1,0 +1,74 @@
+:root {
+  --bs-primary: #0d6efd;
+  --bs-primary-rgb: 13, 110, 253;
+  --bs-success: #0d6efd;
+  --bs-success-rgb: 13, 110, 253;
+  --bs-link-color: #0d6efd;
+  --bs-link-hover-color: #0a58ca;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+/* Use the church app's blue palette for shared Bootstrap success controls. */
+.btn-success {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #0d6efd;
+  --bs-btn-border-color: #0d6efd;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #0a58ca;
+  --bs-btn-hover-border-color: #0a53be;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #0a53be;
+  --bs-btn-active-border-color: #094bac;
+  --bs-btn-disabled-bg: #0d6efd;
+  --bs-btn-disabled-border-color: #0d6efd;
+}
+
+/* Keep all green action buttons in the church app blue. */
+.btn-success,
+.btn-success:focus,
+.btn-success:active,
+.btn-success:disabled {
+  color: #fff !important;
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+}
+
+.btn-success:hover {
+  color: #fff !important;
+  background-color: #0a58ca !important;
+  border-color: #0a58ca !important;
+}
+
+.btn-outline-success {
+  color: #0d6efd !important;
+  border-color: #0d6efd !important;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus,
+.btn-outline-success:active {
+  color: #fff !important;
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+}

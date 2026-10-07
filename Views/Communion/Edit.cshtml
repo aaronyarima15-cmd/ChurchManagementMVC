@@ -1,0 +1,658 @@
+﻿@model ChurchManagementMVC.Models.CommunionService
+
+@{
+    ViewData["Title"] = "Manage Holy Communion";
+
+    var members =
+        ViewBag.Members as List<ChurchManagementMVC.Models.MembershipManagement>
+        ?? new List<ChurchManagementMVC.Models.MembershipManagement>();
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-cup-hot text-success me-2"></i>
+                Manage Holy Communion
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update the service and manage communion participants.
+            </p>
+        </div>
+
+        <div>
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Communion
+
+            </a>
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["Success"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            @TempData["Error"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 py-3">
+
+            <h5 class="mb-0 fw-semibold">
+
+                <i class="bi bi-calendar-check text-success me-2"></i>
+
+                Communion Service Information
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <form asp-action="Edit"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       asp-for="Id" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="CommunionDate"
+                               class="form-label fw-semibold">
+
+                            Communion Date
+
+                        </label>
+
+                        <input asp-for="CommunionDate"
+                               type="date"
+                               class="form-control"
+                               required />
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label asp-for="ServiceType"
+                               class="form-label fw-semibold">
+
+                            Service Type
+
+                        </label>
+
+                        <select asp-for="ServiceType"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+                                -- Select Service --
+                            </option>
+
+                            <option value="Sunday Service">
+                                Sunday Service
+                            </option>
+
+                            <option value="Special Service">
+                                Special Service
+                            </option>
+
+                            <option value="Christmas Service">
+                                Christmas Service
+                            </option>
+
+                            <option value="Easter Service">
+                                Easter Service
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Minister"
+                               class="form-label fw-semibold">
+
+                            Minister
+
+                        </label>
+
+                        <input asp-for="Minister"
+                               class="form-control"
+                               placeholder="Enter minister's name" />
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label asp-for="Remarks"
+                               class="form-label fw-semibold">
+
+                            Remarks
+
+                        </label>
+
+                        <textarea asp-for="Remarks"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Enter remarks..."></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="d-flex justify-content-end mt-4">
+
+                    <button type="submit"
+                            class="btn btn-success">
+
+                        <i class="bi bi-check-circle me-1"></i>
+
+                        Update Service
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         ADD COMMUNION PARTICIPANT
+    ========================================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 py-3">
+
+            <h5 class="mb-0 fw-semibold">
+
+                <i class="bi bi-person-plus text-success me-2"></i>
+
+                Add Communion Participant
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <div class="alert alert-info">
+
+                <i class="bi bi-info-circle me-2"></i>
+
+                Only <strong>
+                baptized members with a membership
+                card number
+            </strong> are available for selection.
+
+            <br />
+
+            <small class="text-muted">
+                Adding a member here will automatically record
+                their attendance as Present for this Communion service.
+            </small>
+
+        </div>
+
+
+        @if (members.Any())
+        {
+            <form asp-action="AddParticipant"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.Id" />
+
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-7">
+
+                        <label class="form-label fw-semibold">
+
+                            Baptized Member
+
+                        </label>
+
+                        <select name="memberId"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+                                -- Select Baptized Member --
+                            </option>
+
+
+                            @foreach (var member in members)
+                            {
+                                var alreadyAdded =
+                                    Model.Participants?
+                                        .Any(p =>
+                                            p.MemberId == member.Id)
+                                    ?? false;
+
+                                if (!alreadyAdded)
+                                {
+                                    <option value="@member.Id">
+
+                                        @member.FirstName
+                                        @member.LastName
+                                        - Card: @member.CardNumber
+
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Remarks
+
+                        </label>
+
+                        <input type="text"
+                               name="remarks"
+                               class="form-control"
+                               placeholder="Optional" />
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <button type="submit"
+                                class="btn btn-success w-100">
+
+                            <i class="bi bi-person-plus me-1"></i>
+
+                            Add
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+        }
+        else
+        {
+            <div class="text-center py-3">
+
+                <i class="bi bi-person-x display-6 text-muted"></i>
+
+                <p class="text-muted mt-2 mb-0">
+
+                    No baptized members with card numbers are available.
+
+                </p>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+         COMMUNION PARTICIPANTS
+    ========================================================== -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white border-0 py-3">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0 fw-semibold">
+
+                <i class="bi bi-people text-success me-2"></i>
+
+                Communion Participants
+
+            </h5>
+
+
+            <span class="badge bg-success">
+
+                @(Model.Participants?.Count ?? 0) Participants
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body p-0">
+
+        @if (Model.Participants != null &&
+             Model.Participants.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th class="ps-4">
+                                #
+                            </th>
+
+                            <th>
+                                Member
+                            </th>
+
+                            <th>
+                                Card Number
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Communion Date
+                            </th>
+
+                            <th>
+                                Attendance
+                            </th>
+
+                            <th>
+                                Remarks
+                            </th>
+
+                            <th class="text-center">
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @{
+                            var number = 1;
+                        }
+
+
+                        @foreach (var participant in Model.Participants)
+                        {
+                            <tr>
+
+                                <!-- Number -->
+
+                                <td class="ps-4 fw-semibold">
+
+                                    @number
+
+                                </td>
+
+
+                                <!-- Member -->
+
+                                <td>
+
+                                    @if (participant.Member != null)
+                                    {
+                                        <span class="fw-semibold">
+
+                                            @participant.Member.FirstName
+                                            @participant.Member.LastName
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+
+                                            Unknown Member
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Card Number -->
+
+                                <td>
+
+                                    @if (participant.Member != null &&
+                                         !string.IsNullOrWhiteSpace(
+                                             participant.Member.CardNumber))
+                                    {
+                                        <span class="badge bg-success">
+
+                                            @participant.Member.CardNumber
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Phone -->
+
+                                <td>
+
+                                    @if (participant.Member != null)
+                                    {
+                                        @participant.Member.PhoneNumber
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Communion Date -->
+
+                                <td>
+
+                                    <span class="fw-semibold">
+
+                                        @Model.CommunionDate.ToString("dd MMM yyyy")
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Attendance -->
+
+                                <td>
+
+                                    <span class="badge bg-success">
+
+                                        <i class="bi bi-check-circle me-1"></i>
+
+                                        Present
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Remarks -->
+
+                                <td>
+
+                                    @if (!string.IsNullOrWhiteSpace(
+                                        participant.Remarks))
+                                    {
+                                        @participant.Remarks
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Action -->
+
+                                <td class="text-center">
+
+                                    <form asp-action="RemoveParticipant"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Are you sure you want to remove this participant?');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@Model.Id" />
+
+                                        <input type="hidden"
+                                               name="participantId"
+                                               value="@participant.Id" />
+
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Remove Participant">
+
+                                            <i class="bi bi-person-dash"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+
+
+                            number++;
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+
+                <i class="bi bi-people display-5 text-muted"></i>
+
+                <h5 class="mt-3">
+
+                    No Participants Yet
+
+                </h5>
+
+                <p class="text-muted mb-0">
+
+                    Add baptized members using the form above.
+
+                </p>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

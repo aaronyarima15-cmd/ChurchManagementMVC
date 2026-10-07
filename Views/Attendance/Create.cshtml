@@ -1,0 +1,346 @@
+﻿@model ChurchManagementMVC.Models.AttendanceSummary
+
+@{
+    ViewData["Title"] = "Record Attendance";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                Record Attendance
+            </h2>
+
+            <p class="text-muted mb-0">
+                Record the total church attendance
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="mb-0 fw-bold">
+
+                <i class="bi bi-calendar-check me-2 text-success"></i>
+
+                Attendance Information
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="AttendanceDate"
+                               class="form-label fw-semibold">
+
+                            Attendance Date
+
+                        </label>
+
+                        <input asp-for="AttendanceDate"
+                               type="date"
+                               class="form-control"
+                               required />
+
+                        <span asp-validation-for="AttendanceDate"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label asp-for="ServiceType"
+                               class="form-label fw-semibold">
+
+                            Service Type
+
+                        </label>
+
+                        <select asp-for="ServiceType"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+                                -- Select Service --
+                            </option>
+
+                            <option value="Sunday Service">
+                                Sunday Service
+                            </option>
+
+                            <option value="Bible Study">
+                                Bible Study
+                            </option>
+
+                            <option value="Youth Fellowship">
+                                Youth Fellowship
+                            </option>
+
+                            <option value="Prayer Meeting">
+                                Prayer Meeting
+                            </option>
+
+                            <option value="Boys Brigade">
+                                Boys Brigade
+                            </option>
+
+                            <option value="Special Service">
+                                Special Service
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="ServiceType"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label asp-for="Men"
+                               class="form-label fw-semibold">
+
+                            <i class="bi bi-person-fill me-1"></i>
+
+                            Men
+
+                        </label>
+
+                        <input asp-for="Men"
+                               type="number"
+                               min="0"
+                               class="form-control attendance-number"
+                               required />
+
+                        <span asp-validation-for="Men"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label asp-for="Women"
+                               class="form-label fw-semibold">
+
+                            <i class="bi bi-person-fill me-1"></i>
+
+                            Women
+
+                        </label>
+
+                        <input asp-for="Women"
+                               type="number"
+                               min="0"
+                               class="form-control attendance-number"
+                               required />
+
+                        <span asp-validation-for="Women"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label asp-for="Children"
+                               class="form-label fw-semibold">
+
+                            <i class="bi bi-people-fill me-1"></i>
+
+                            Children
+
+                        </label>
+
+                        <input asp-for="Children"
+                               type="number"
+                               min="0"
+                               class="form-control attendance-number"
+                               required />
+
+                        <span asp-validation-for="Children"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <div class="p-4 rounded bg-light border">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div>
+
+                                    <h6 class="text-muted mb-1">
+                                        Total Attendance
+                                    </h6>
+
+                                    <h2 class="fw-bold text-success mb-0"
+                                        id="totalAttendance">
+
+                                        0
+
+                                    </h2>
+
+                                </div>
+
+                                <i class="bi bi-people-fill text-success"
+                                   style="font-size: 2.5rem;">
+                                </i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <label asp-for="Remarks"
+                               class="form-label fw-semibold">
+
+                            Remarks
+
+                        </label>
+
+                        <textarea asp-for="Remarks"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Optional remarks...">
+                        </textarea>
+
+                        <span asp-validation-for="Remarks"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-4">
+
+                    <button type="submit"
+                            class="btn btn-success">
+
+                        <i class="bi bi-check-circle me-1"></i>
+
+                        Save Attendance
+
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary ms-2">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+
+
+    <script>
+
+        function calculateTotal() {
+
+            const men =
+                parseInt(
+                    document.getElementById("Men").value
+                ) || 0;
+
+            const women =
+                parseInt(
+                    document.getElementById("Women").value
+                ) || 0;
+
+            const children =
+                parseInt(
+                    document.getElementById("Children").value
+                ) || 0;
+
+            const total =
+                men + women + children;
+
+            document.getElementById(
+                "totalAttendance"
+            ).innerText = total;
+        }
+
+
+        document
+            .querySelectorAll(".attendance-number")
+            .forEach(function (input) {
+
+                input.addEventListener(
+                    "input",
+                    calculateTotal
+                );
+
+            });
+
+
+        calculateTotal();
+
+    </script>
+}

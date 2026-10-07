@@ -1,0 +1,693 @@
+@model ChurchManagementMVC.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<style>
+
+    .dashboard-hero {
+        background: linear-gradient(135deg, #0b1f4b, #123b80);
+        color: white;
+        border-radius: 18px;
+        padding: 2rem;
+    }
+
+    .stat-card {
+        border: 0;
+        border-radius: 16px;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 .8rem 1.5rem rgba(15, 118, 110, .15) !important;
+        }
+
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        font-size: 1.35rem;
+    }
+
+    .quick-action {
+        border-radius: 12px;
+        padding: 1rem;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        border: 1px solid #e5e7eb;
+        transition: all .2s ease;
+    }
+
+        .quick-action:hover {
+            background: #f0fdfa;
+            border-color: #14b8a6;
+            color: inherit;
+            transform: translateY(-2px);
+        }
+
+</style>
+
+
+<div class="container-fluid py-4">
+
+
+    <!-- ==============================
+         DASHBOARD HEADER
+         ============================== -->
+
+    <section class="dashboard-hero shadow-sm mb-4">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-8">
+
+                <p class="text-white-50 mb-2">
+
+                    <i class="bi bi-calendar3 me-1"></i>
+
+                    @DateTime.Today.ToString("dddd, dd MMMM yyyy")
+
+                </p>
+
+                <h1 class="display-6 fw-bold mb-2">
+
+                    <i class="bi bi-building-fill me-2"></i>
+                    Church Dashboard
+
+                </h1>
+
+                <p class="mb-0">
+
+                    Welcome to the Church Management System.
+
+                </p>
+
+            </div>
+
+
+            <!-- CREATE EVENT -->
+            @if (
+                User.IsInRole("Admin") ||
+                User.IsInRole("Pastor") ||
+                User.IsInRole("Secretary")
+            )
+            {
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+                    <a asp-controller="Events"
+                       asp-action="Create"
+                       class="btn btn-light rounded-3 px-4 fw-semibold shadow-sm">
+
+                        <i class="bi bi-calendar-plus-fill me-2"></i>
+                        Create Event
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==============================
+         STAT CARDS
+         ============================== -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- MEMBERS -->
+        @if (
+            User.IsInRole("Admin") ||
+            User.IsInRole("Pastor") ||
+            User.IsInRole("Secretary")
+        )
+        {
+            <div class="col-md-4">
+
+                <a asp-controller="Members"
+                   asp-action="Index"
+                   class="text-decoration-none">
+
+                    <div class="card stat-card shadow-sm h-100">
+
+                        <div class="card-body d-flex align-items-center p-4">
+
+                            <div class="stat-icon
+                                bg-primary bg-opacity-10
+                                text-primary me-3">
+
+                                <i class="bi bi-people-fill"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-muted mb-1">
+                                    Members
+                                </p>
+
+                                <h2 class="fw-bold mb-0">
+                                    @Model.PeopleCount
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+        }
+
+
+        <!-- GROUPS -->
+        @if (
+            User.IsInRole("Admin") ||
+            User.IsInRole("Pastor") ||
+            User.IsInRole("Secretary")
+        )
+        {
+            <div class="col-md-4">
+
+                <a asp-controller="Groups"
+                   asp-action="Index"
+                   class="text-decoration-none">
+
+                    <div class="card stat-card shadow-sm h-100">
+
+                        <div class="card-body d-flex align-items-center p-4">
+
+                            <div class="stat-icon
+                                bg-success bg-opacity-10
+                                text-success me-3">
+
+                                <i class="bi bi-diagram-3-fill"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-muted mb-1">
+                                    Groups
+                                </p>
+
+                                <h2 class="fw-bold mb-0">
+                                    @Model.GroupsCount
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+        }
+
+
+        <!-- COLLECTIONS -->
+        @if (
+            User.IsInRole("Admin") ||
+            User.IsInRole("Treasurer")
+        )
+        {
+            <div class="col-md-4">
+
+                <a asp-controller="Collections"
+                   asp-action="Index"
+                   class="text-decoration-none">
+
+                    <div class="card stat-card shadow-sm h-100">
+
+                        <div class="card-body d-flex align-items-center p-4">
+
+                            <div class="stat-icon
+                                bg-warning bg-opacity-10
+                                text-warning me-3">
+
+                                <i class="bi bi-wallet2"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-muted mb-1">
+                                    Collections Recorded
+                                </p>
+
+                                <h2 class="fw-bold mb-0">
+                                    @Model.CollectionsCount
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+
+
+    <!-- ==============================
+         UPCOMING EVENTS
+         ============================== -->
+    @if (
+            User.IsInRole("Admin") ||
+            User.IsInRole("Pastor") ||
+            User.IsInRole("Secretary")
+        )
+    {
+        <div class="row g-4">
+
+
+            <!-- UPCOMING EVENTS -->
+            <div class="col-lg-8">
+
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+
+
+                    <!-- CARD HEADER -->
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h5 class="fw-bold mb-1">
+
+                                    <i class="bi bi-calendar-event-fill me-2"></i>
+                                    Upcoming Events
+
+                                </h5>
+
+                                <p class="text-muted mb-0">
+                                    Your next five scheduled events
+                                </p>
+
+                            </div>
+
+
+                            <a asp-controller="Events"
+                               asp-action="Index"
+                               class="btn btn-outline-success btn-sm rounded-3 px-3">
+
+                                <i class="bi bi-calendar3 me-1"></i>
+                                View All
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CARD BODY -->
+                    <div class="card-body p-0">
+
+                        @if (Model.UpcomingEvents.Any())
+                        {
+                            <div class="table-responsive">
+
+                                <table class="table table-hover align-middle mb-0">
+
+                                    <thead class="table-light">
+
+                                        <tr>
+
+                                            <th class="ps-4">
+                                                Event
+                                            </th>
+
+                                            <th>
+                                                Date
+                                            </th>
+
+                                            <th>
+                                                Time
+                                            </th>
+
+                                            <th>
+                                                Location
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+
+                                    <tbody>
+
+                                        @foreach (var item in Model.UpcomingEvents)
+                                        {
+                                            <tr>
+
+                                                <!-- EVENT -->
+                                                <td class="ps-4">
+
+                                                    <div class="d-flex align-items-center">
+
+                                                        <div class="bg-success bg-opacity-10
+                                                            text-success rounded-circle
+                                                            d-flex align-items-center
+                                                            justify-content-center me-3"
+                                                             style="width: 40px; height: 40px;">
+
+                                                            <i class="bi bi-calendar-event-fill"></i>
+
+                                                        </div>
+
+                                                        <div>
+
+                                                            <div class="fw-semibold">
+                                                                @item.EventName
+                                                            </div>
+
+                                                            <small class="text-muted">
+
+                                                                @(item.EventType?.Name ?? "General")
+
+                                                            </small>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </td>
+
+
+                                                <!-- DATE -->
+                                                <td>
+
+                                                    <span class="text-muted">
+
+                                                        <i class="bi bi-calendar3 me-1"></i>
+
+                                                        @item.EventDate.ToString("ddd, dd MMM yyyy")
+
+                                                    </span>
+
+                                                </td>
+
+
+                                                <!-- TIME -->
+                                                <td>
+
+                                                    <span class="text-muted">
+
+                                                        <i class="bi bi-clock me-1"></i>
+
+                                                        @item.EventTime.ToString(@"hh\:mm")
+
+                                                    </span>
+
+                                                </td>
+
+
+                                                <!-- LOCATION -->
+                                                <td>
+
+                                                    <span class="text-muted">
+
+                                                        <i class="bi bi-geo-alt me-1"></i>
+
+                                                        @item.Location
+
+                                                    </span>
+
+                                                </td>
+
+                                            </tr>
+                                        }
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- EMPTY STATE -->
+                            <div class="text-center py-5">
+
+                                <div class="mb-3">
+
+                                    <i class="bi bi-calendar-x display-4 text-muted"></i>
+
+                                </div>
+
+                                <h5 class="fw-bold">
+                                    No Upcoming Events
+                                </h5>
+
+                                <p class="text-muted mb-4">
+                                    Create an event to have it appear here.
+                                </p>
+
+                                <a asp-controller="Events"
+                                   asp-action="Create"
+                                   class="btn btn-success rounded-3 px-4">
+
+                                    <i class="bi bi-plus-circle-fill me-2"></i>
+                                    Add Event
+
+                                </a>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ==============================
+                 QUICK ACTIONS
+                 ============================== -->
+
+            <div class="col-lg-4">
+
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+
+
+                    <!-- CARD HEADER -->
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+
+                        <h5 class="fw-bold mb-1">
+
+                            <i class="bi bi-lightning-charge-fill me-2"></i>
+                            Quick Actions
+
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Common management tasks
+                        </p>
+
+                    </div>
+
+
+                    <!-- CARD BODY -->
+                    <div class="card-body px-4 pb-4">
+
+                        <div class="d-grid gap-3">
+
+
+                            <!-- MEMBERS -->
+                            @if (
+                                User.IsInRole("Admin") ||
+                                User.IsInRole("Pastor") ||
+                                User.IsInRole("Secretary")
+                            )
+                            {
+                                <a asp-controller="Members"
+                                   asp-action="Index"
+                                   class="quick-action">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="bg-primary bg-opacity-10
+                                            text-primary rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width: 40px; height: 40px;">
+
+                                            <i class="bi bi-people-fill"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                View Members
+                                            </strong>
+
+                                            <div class="small text-muted">
+                                                View church member records
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+                            }
+
+
+                            <!-- GROUPS -->
+                            @if (
+                                User.IsInRole("Admin") ||
+                                User.IsInRole("Pastor") ||
+                                User.IsInRole("Secretary")
+                            )
+                            {
+                                <a asp-controller="Groups"
+                                   asp-action="Index"
+                                   class="quick-action">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="bg-success bg-opacity-10
+                                            text-success rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width: 40px; height: 40px;">
+
+                                            <i class="bi bi-diagram-3-fill"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                View Groups
+                                            </strong>
+
+                                            <div class="small text-muted">
+                                                View church groups and activities
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+                            }
+
+
+                            <!-- CREATE EVENT -->
+                            @if (
+                                User.IsInRole("Admin") ||
+                                User.IsInRole("Pastor") ||
+                                User.IsInRole("Secretary")
+                            )
+                            {
+                                <a asp-controller="Events"
+                                   asp-action="Create"
+                                   class="quick-action">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="bg-warning bg-opacity-10
+                                            text-warning rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width: 40px; height: 40px;">
+
+                                            <i class="bi bi-calendar-plus-fill"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                Create Event
+                                            </strong>
+
+                                            <div class="small text-muted">
+                                                Schedule a new church event
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+                            }
+
+
+                            <!-- COLLECTION -->
+                            @if (
+                                User.IsInRole("Admin") ||
+                                User.IsInRole("Treasurer")
+                            )
+                            {
+                                <a asp-controller="Collections"
+                                   asp-action="Create"
+                                   class="quick-action">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="bg-info bg-opacity-10
+                                            text-info rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width: 40px; height: 40px;">
+
+                                            <i class="bi bi-wallet2"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                Record Collection
+                                            </strong>
+
+                                            <div class="small text-muted">
+                                                Add a new collection record
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+                            }
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>

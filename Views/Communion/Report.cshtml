@@ -1,0 +1,411 @@
+@model ChurchManagementMVC.Models.CommunionReportVM
+
+@{
+    ViewData["Title"] = "Communion Report";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-cup-hot text-success"></i>
+
+                Communion Report
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Holy Communion participation report
+
+            </p>
+
+        </div>
+
+
+        <a asp-controller="Communion"
+           asp-action="ExportToExcel"
+           asp-route-date="@Model.CommunionDate.ToString("yyyy-MM-dd")"
+           class="btn btn-success">
+
+            <i class="bi bi-file-earmark-excel"></i>
+
+            Export to Excel
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================================
+         DATE SELECTION
+    ========================================================== -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-success text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-calendar-event"></i>
+
+                Communion Date
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form method="get"
+                  asp-controller="Communion"
+                  asp-action="Report">
+
+                <div class="row align-items-end">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Select Communion Date
+
+                        </label>
+
+
+                        <input type="date"
+                               name="date"
+                               value="@Model.CommunionDate.ToString("yyyy-MM-dd")"
+                               class="form-control" />
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <button type="submit"
+                                class="btn btn-success">
+
+                            <i class="bi bi-search"></i>
+
+                            View Report
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-1">Members Present Record</h5>
+                <p class="text-muted mb-0">
+                    View the members marked Present on @Model.CommunionDate.ToString("dd/MM/yyyy").
+                </p>
+            </div>
+            <a asp-controller="Communion"
+               asp-action="PresentMembers"
+               asp-route-date="@Model.CommunionDate.ToString("yyyy-MM-dd")"
+               class="btn btn-success">
+                <i class="bi bi-people-fill"></i>
+                View Members Present
+            </a>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         ANNUAL COMMUNION REPORT
+    ========================================================== -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-success text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-calendar3"></i>
+
+                Annual Communion Participation
+                - @Model.Year
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <p class="text-muted">
+
+                <strong>P</strong> = Present
+                &nbsp;&nbsp;&nbsp;
+
+                <strong>A</strong> = Absent
+                &nbsp;&nbsp;&nbsp;
+
+                Blank = No Communion record
+
+            </p>
+
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover text-center align-middle communion-report-table">
+
+                    <thead class="table-success">
+
+                        <tr>
+
+                            <th class="member-name-column">
+
+                                Name
+
+                            </th>
+
+
+                            <th class="member-group-column">
+
+                                Group
+
+                            </th>
+
+
+                            <th>
+
+                                Jan
+
+                            </th>
+
+
+                            <th>
+
+                                Feb
+
+                            </th>
+
+
+                            <th>
+
+                                Mar
+
+                            </th>
+
+
+                            <th>
+
+                                Apr
+
+                            </th>
+
+
+                            <th>
+
+                                May
+
+                            </th>
+
+
+                            <th>
+
+                                Jun
+
+                            </th>
+
+
+                            <th>
+
+                                Jul
+
+                            </th>
+
+
+                            <th>
+
+                                Aug
+
+                            </th>
+
+
+                            <th>
+
+                                Sep
+
+                            </th>
+
+
+                            <th>
+
+                                Oct
+
+                            </th>
+
+
+                            <th>
+
+                                Nov
+
+                            </th>
+
+
+                            <th>
+
+                                Dec
+
+                            </th>
+
+
+                            <th>
+
+                                Download
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var member in Model.MonthlyMembers)
+                        {
+
+                            <tr>
+
+                                <td class="text-start fw-semibold">
+
+                                    @member.Name
+
+                                </td>
+
+
+                                <td class="text-start">
+
+                                    @member.Group
+
+                                </td>
+
+
+                                @for (
+                                    int month = 0;
+                                    month < 12;
+                                    month++)
+                                {
+
+                                    var status =
+                                        member.Months[month];
+
+
+                                    <td>
+
+                                        @if (status == "P")
+                                        {
+
+                                            <span class="badge bg-success">
+
+                                                P
+
+                                            </span>
+
+                                        }
+
+                                        else if (status == "A")
+                                        {
+
+                                            <span class="badge bg-danger">
+
+                                                A
+
+                                            </span>
+
+                                        }
+
+                                        else
+                                        {
+
+                                            <span class="text-muted">
+
+                                                -
+
+                                            </span>
+
+                                        }
+
+                                    </td>
+
+                                }
+
+
+                                <td>
+
+                                    <a asp-controller="Communion"
+                                       asp-action="ExportIndividualMemberToPdf"
+                                       asp-route-memberId="@member.MemberId"
+                                       asp-route-year="@Model.Year"
+                                       class="btn btn-sm btn-success">
+
+                                        <i class="bi bi-file-earmark-pdf"></i>
+
+                                        Review & Download PDF
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .communion-report-table {
+        min-width: 1300px;
+    }
+
+
+        .communion-report-table th,
+        .communion-report-table td {
+            padding: 10px;
+            vertical-align: middle;
+        }
+
+
+    .member-name-column {
+        min-width: 200px;
+    }
+
+
+    .member-group-column {
+        min-width: 150px;
+    }
+
+</style>

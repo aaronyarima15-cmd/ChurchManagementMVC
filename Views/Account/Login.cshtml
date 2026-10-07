@@ -1,0 +1,243 @@
+﻿@model ChurchManagementMVC.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="row justify-content-center align-items-center"
+         style="min-height: calc(100vh - 120px);">
+
+        <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10">
+
+            <div class="card shadow-sm border-0 rounded-4">
+
+                <!-- Header -->
+                <div class="card-header bg-white border-0 pt-5 px-4 px-md-5 text-center">
+
+                    <div class="d-flex justify-content-center mb-3">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center"
+                             style="width: 75px; height: 75px;">
+
+                            <i class="bi bi-building-fill fs-2"></i>
+
+                        </div>
+
+                    </div>
+
+                    <h2 class="fw-bold mb-2">
+                        Welcome Back
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Sign in to continue to Church Management
+                    </p>
+
+                </div>
+
+
+                <!-- Login Form -->
+                <div class="card-body p-4 p-md-5">
+
+                    <form asp-action="Login" method="post">
+
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger border-0 rounded-3"
+                             role="alert">
+                        </div>
+
+
+                        <!-- Email -->
+                        <div class="mb-4">
+
+                            <label asp-for="Email"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-envelope me-1"></i>
+                                Email Address
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-envelope text-muted"></i>
+                                </span>
+
+                                <input asp-for="Email"
+                                       class="form-control form-control-lg border-start-0 rounded-end-3"
+                                       placeholder="Enter your email"
+                                       autocomplete="email" />
+
+                            </div>
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Password -->
+                        <div class="mb-3">
+
+                            <label asp-for="Password"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-lock me-1"></i>
+                                Password
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-lock text-muted"></i>
+                                </span>
+
+                                <input asp-for="Password"
+                                       id="passwordInput"
+                                       type="password"
+                                       class="form-control form-control-lg border-start-0"
+                                       placeholder="Enter your password"
+                                       autocomplete="current-password" />
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        id="togglePassword"
+                                        title="Show password">
+
+                                    <i class="bi bi-eye"
+                                       id="passwordIcon">
+                                    </i>
+
+                                </button>
+
+                            </div>
+
+                            <span asp-validation-for="Password"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Remember Me -->
+                        <div class="form-check mb-4">
+
+                            <input asp-for="RememberMe"
+                                   class="form-check-input" />
+
+                            <label asp-for="RememberMe"
+                                   class="form-check-label">
+
+                                Remember me
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- Login Button -->
+                        <div class="d-grid">
+
+                            <button type="submit"
+                                    class="btn btn-success rounded-3 px-4 py-3 shadow-sm">
+
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                                Sign In
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                    <!-- Register -->
+                    <div class="text-center mt-4">
+
+                        <span class="text-muted">
+                            Don't have an account?
+                        </span>
+
+                        <a asp-action="Register"
+                           class="fw-semibold text-success text-decoration-none ms-1">
+
+                            Register
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer -->
+            <div class="text-center mt-4">
+
+                <small class="text-muted">
+                    <i class="bi bi-shield-check me-1"></i>
+                    Secure Church Management System
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document
+            .getElementById("togglePassword")
+            .addEventListener("click", function () {
+
+                const passwordInput =
+                    document.getElementById("passwordInput");
+
+                const passwordIcon =
+                    document.getElementById("passwordIcon");
+
+                if (passwordInput.type === "password") {
+
+                    passwordInput.type = "text";
+
+                    passwordIcon.classList.remove("bi-eye");
+
+                    passwordIcon.classList.add("bi-eye-slash");
+
+                    this.title = "Hide password";
+
+                }
+                else {
+
+                    passwordInput.type = "password";
+
+                    passwordIcon.classList.remove("bi-eye-slash");
+
+                    passwordIcon.classList.add("bi-eye");
+
+                    this.title = "Show password";
+
+                }
+
+            });
+
+    </script>
+}

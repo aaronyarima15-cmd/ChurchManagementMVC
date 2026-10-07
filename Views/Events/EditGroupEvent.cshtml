@@ -1,0 +1,364 @@
+@model ChurchManagementMVC.Models.EventManagement
+
+@{
+    ViewData["Title"] = "Edit Group Event";
+
+    var group = ViewBag.Group as ChurchManagementMVC.Models.GroupManagement;
+    var groupId = ViewBag.GroupId;
+}
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <div class="d-flex align-items-center gap-2 mb-2">
+
+                <a asp-controller="Events"
+                   asp-action="GroupEvents"
+                   asp-route-groupId="@groupId"
+                   class="btn btn-light border rounded-3">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Back to Group Events
+
+                </a>
+
+            </div>
+
+            <h3 class="fw-bold mb-1">
+
+                <i class="bi bi-pencil-square text-success me-2"></i>
+                Edit Group Event
+
+            </h3>
+
+            <p class="text-muted mb-0">
+
+                Update event for
+                <strong>@group?.GroupName</strong>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         EVENT FORM
+    ========================================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-body p-4">
+
+            <form asp-action="EditGroupEvent"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <input type="hidden"
+                       asp-for="Id" />
+
+                <input type="hidden"
+                       asp-for="GroupId" />
+
+
+                <!-- GROUP -->
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+                        Group
+                    </label>
+
+                    <input type="text"
+                           class="form-control rounded-3"
+                           value="@group?.GroupName"
+                           readonly />
+
+                </div>
+
+
+                <div class="row g-4">
+
+                    <!-- EVENT NAME -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="EventName"
+                               class="form-label fw-semibold">
+
+                            Event Name
+
+                        </label>
+
+                        <input asp-for="EventName"
+                               class="form-control rounded-3"
+                               placeholder="Enter event name" />
+
+                        <span asp-validation-for="EventName"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- EVENT TYPE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="EventTypeId"
+                               class="form-label fw-semibold">
+
+                            Event Type
+
+                        </label>
+
+                        <select asp-for="EventTypeId"
+                                class="form-select rounded-3">
+
+                            <option value="">
+                                Select Event Type
+                            </option>
+
+                            @foreach (var type in ViewBag.EventTypes)
+                            {
+                                <option value="@type.Id">
+                                    @type.Name
+                                </option>
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="EventTypeId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- COORDINATOR -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="CoordinatorId"
+                               class="form-label fw-semibold">
+
+                            Coordinator
+
+                        </label>
+
+                        <select asp-for="CoordinatorId"
+                                class="form-select rounded-3">
+
+                            <option value="">
+                                Select Coordinator
+                            </option>
+
+                            @foreach (var member in ViewBag.Members)
+                            {
+                                <option value="@member.Id">
+                                    @member.FirstName @member.LastName @member.OtherNames
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- LOCATION -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Location"
+                               class="form-label fw-semibold">
+
+                            Location
+
+                        </label>
+
+                        <input asp-for="Location"
+                               class="form-control rounded-3"
+                               placeholder="Enter event location" />
+
+                        <span asp-validation-for="Location"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- EVENT DATE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="EventDate"
+                               class="form-label fw-semibold">
+
+                            Event Date
+
+                        </label>
+
+                        <input asp-for="EventDate"
+                               type="date"
+                               class="form-control rounded-3" />
+
+                        <span asp-validation-for="EventDate"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- EVENT TIME -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="EventTime"
+                               class="form-label fw-semibold">
+
+                            Event Time
+
+                        </label>
+
+                        <input asp-for="EventTime"
+                               type="time"
+                               class="form-control rounded-3" />
+
+                        <span asp-validation-for="EventTime"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Status"
+                               class="form-label fw-semibold">
+
+                            Status
+
+                        </label>
+
+                        <select asp-for="Status"
+                                class="form-select rounded-3">
+
+                            <option value="">
+                                Select Status
+                            </option>
+
+                            <option value="Upcoming">
+                                Upcoming
+                            </option>
+
+                            <option value="Completed">
+                                Completed
+                            </option>
+
+                            <option value="Cancelled">
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="Status"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- EVENT ITEM -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="EventItem"
+                               class="form-label fw-semibold">
+
+                            Event Item
+
+                        </label>
+
+                        <input asp-for="EventItem"
+                               class="form-control rounded-3"
+                               placeholder="Enter event item (optional)" />
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Description"
+                               class="form-label fw-semibold">
+
+                            Description
+
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control rounded-3"
+                                  rows="4"
+                                  placeholder="Enter event description (optional)">
+                        </textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     BUTTONS
+                ================================================== -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a asp-controller="Events"
+                       asp-action="GroupEvents"
+                       asp-route-groupId="@groupId"
+                       class="btn btn-light border rounded-3 px-4">
+
+                        Cancel
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-success rounded-3 px-4">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        Update Event
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

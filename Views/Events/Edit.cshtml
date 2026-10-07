@@ -1,0 +1,349 @@
+﻿@model ChurchManagementMVC.Models.EventManagement
+
+@{
+    ViewData["Title"] = "Edit Event";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-pencil-square me-2"></i>
+                Edit Event
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update the church event information.
+            </p>
+        </div>
+
+        <div>
+            <a asp-action="Index"
+               class="btn btn-outline-secondary rounded-3 px-4">
+
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to Events
+
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Event Form -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-9 col-lg-10">
+
+            <div class="card shadow-sm border-0 rounded-4">
+
+                <!-- Card Header -->
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-calendar-event fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                Event Information
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Modify the details of this church event.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4">
+
+                    <form asp-action="Edit" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <!-- Hidden ID -->
+                        <input type="hidden"
+                               asp-for="Id" />
+
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger border-0 rounded-3 mb-4">
+                        </div>
+
+                        <!-- Event Name -->
+                        <div class="mb-4">
+
+                            <label asp-for="EventName"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-calendar2-event me-1"></i>
+                                Event Name
+
+                            </label>
+
+                            <input asp-for="EventName"
+                                   class="form-control form-control-lg rounded-3"
+                                   placeholder="Enter event name" />
+
+                            <span asp-validation-for="EventName"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+
+                            <label asp-for="Description"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-card-text me-1"></i>
+                                Description
+
+                            </label>
+
+                            <textarea asp-for="Description"
+                                      class="form-control form-control-lg rounded-3"
+                                      rows="4"
+                                      placeholder="Enter event description"></textarea>
+
+                            <span asp-validation-for="Description"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+                        <!-- Date and Time -->
+                        <div class="row">
+
+                            <!-- Event Date -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="EventDate"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    Event Date
+
+                                </label>
+
+                                <input asp-for="EventDate"
+                                       type="date"
+                                       class="form-control form-control-lg rounded-3" />
+
+                                <span asp-validation-for="EventDate"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Event Time -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="EventTime"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-clock me-1"></i>
+                                    Event Time
+
+                                </label>
+
+                                <input asp-for="EventTime"
+                                       type="time"
+                                       class="form-control form-control-lg rounded-3" />
+
+                                <span asp-validation-for="EventTime"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Event Type and Coordinator -->
+                        <div class="row">
+
+                            <!-- Event Type -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="EventTypeId"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-tags-fill me-1"></i>
+                                    Event Type
+
+                                </label>
+
+                                <select asp-for="EventTypeId"
+                                        class="form-select form-select-lg rounded-3"
+                                        asp-items="@(new SelectList(ViewBag.EventTypes, "Id", "Name"))">
+
+                                    <option value="">
+                                        -- Select Type --
+                                    </option>
+
+                                </select>
+
+                                <span asp-validation-for="EventTypeId"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Coordinator -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="CoordinatorId"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-person-fill me-1"></i>
+                                    Coordinator
+
+                                </label>
+
+                                <select asp-for="CoordinatorId"
+                                        class="form-select form-select-lg rounded-3"
+                                        asp-items="@(new SelectList(ViewBag.Members, "Id", "FullName"))">
+
+                                    <option value="">
+                                        -- Select Coordinator --
+                                    </option>
+
+                                </select>
+
+                                <span asp-validation-for="CoordinatorId"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Group and Location -->
+                        <div class="row">
+
+                            <!-- Group -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="GroupId"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-people-fill me-1"></i>
+                                    Group
+
+                                </label>
+
+                                <select asp-for="GroupId"
+                                        class="form-select form-select-lg rounded-3"
+                                        asp-items="@(new SelectList(ViewBag.Groups, "Id", "GroupName"))">
+
+                                    <option value="">
+                                        -- Select Group --
+                                    </option>
+
+                                </select>
+
+                                <span asp-validation-for="GroupId"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Location -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="Location"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-geo-alt-fill me-1"></i>
+                                    Location
+
+                                </label>
+
+                                <input asp-for="Location"
+                                       class="form-control form-control-lg rounded-3"
+                                       placeholder="Enter event location" />
+
+                                <span asp-validation-for="Location"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Status -->
+                        <div class="mb-4">
+
+                            <label asp-for="Status"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-info-circle-fill me-1"></i>
+                                Status
+
+                            </label>
+
+                            <input asp-for="Status"
+                                   class="form-control form-control-lg rounded-3"
+                                   placeholder="Enter event status" />
+
+                            <span asp-validation-for="Status"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <a asp-action="Index"
+                               class="btn btn-outline-secondary rounded-3 px-4">
+
+                                <i class="bi bi-x-circle me-1"></i>
+                                Cancel
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success rounded-3 px-4 shadow-sm">
+
+                                <i class="bi bi-check-circle-fill me-1"></i>
+                                Update Event
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

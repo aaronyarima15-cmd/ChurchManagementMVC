@@ -1,0 +1,374 @@
+﻿@model List<ChurchManagementMVC.Models.Position>
+
+@{
+    ViewData["Title"] = "Positions";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-award-fill me-2"></i>
+
+                Positions
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Manage church committee positions.
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a asp-action="Create"
+               class="btn btn-success rounded-3 px-4 shadow-sm">
+
+                <i class="bi bi-plus-circle me-2"></i>
+
+                Add Position
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Success Message -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm"
+             role="alert">
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            @TempData["Success"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    <!-- Error Message -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm"
+             role="alert">
+
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+            @TempData["Error"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    <!-- Position Card -->
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body p-0">
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="ps-4">
+                                    #
+                                </th>
+
+                                <th>
+                                    Position Name
+                                </th>
+
+                                <th>
+                                    Date Created
+                                </th>
+
+                                <th class="text-center">
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @{
+                                int count = 1;
+                            }
+
+                            @foreach (var position in Model)
+                            {
+                                <tr>
+
+                                    <td class="ps-4 fw-semibold text-muted">
+                                        @count
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="bg-primary bg-opacity-10
+                                                text-primary rounded-circle
+                                                d-flex align-items-center
+                                                justify-content-center me-3"
+                                                 style="width:42px;height:42px;">
+
+                                                <i class="bi bi-award-fill"></i>
+
+                                            </div>
+
+                                            <span class="fw-semibold">
+
+                                                @position.PositionName
+
+                                            </span>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="text-muted">
+
+                                            <i class="bi bi-calendar3 me-2"></i>
+
+                                            @position.DateCreated.ToString("dd MMM yyyy")
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td class="text-center">
+
+                                        <div class="d-flex justify-content-center gap-2">
+
+                                            <!-- Edit -->
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@position.Id"
+                                               class="btn btn-sm btn-outline-success rounded-3 px-3">
+
+                                                <i class="bi bi-pencil-square me-1"></i>
+
+                                                Edit
+
+                                            </a>
+
+
+                                            <!-- Delete -->
+
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger rounded-3 px-3"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    data-id="@position.Id"
+                                                    data-name="@position.PositionName"
+                                                    onclick="setDeleteDetails(this)">
+
+                                                <i class="bi bi-trash3 me-1"></i>
+
+                                                Delete
+
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                count++;
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <!-- Empty State -->
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-award display-4 text-muted"></i>
+
+                    <h5 class="fw-bold mt-3">
+                        No Positions Found
+                    </h5>
+
+                    <p class="text-muted mb-4">
+
+                        No church committee positions have been created yet.
+
+                    </p>
+
+                    <a asp-action="Create"
+                       class="btn btn-success rounded-3 px-4">
+
+                        <i class="bi bi-plus-circle me-2"></i>
+
+                        Add First Position
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Delete Modal -->
+
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow-lg rounded-4">
+
+            <div class="modal-header bg-danger text-white rounded-top-4">
+
+                <h5 class="modal-title">
+
+                    <i class="bi bi-trash3-fill me-2"></i>
+
+                    Delete Position
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+
+            <div class="modal-body text-center py-4">
+
+                <i class="bi bi-exclamation-triangle-fill text-danger"
+                   style="font-size:50px;">
+                </i>
+
+                <h5 class="fw-bold mt-3">
+                    Are you sure?
+                </h5>
+
+                <p class="text-muted">
+                    You are about to delete:
+                </p>
+
+                <h5 id="deletePositionName"
+                    class="fw-bold text-dark">
+                </h5>
+
+                <p class="text-muted small">
+                    A position that is already being used by a
+                    committee official cannot be deleted.
+                </p>
+
+            </div>
+
+
+            <div class="modal-footer justify-content-center border-0 pb-4">
+
+                <button type="button"
+                        class="btn btn-secondary rounded-3 px-4"
+                        data-bs-dismiss="modal">
+
+                    <i class="bi bi-x-circle me-1"></i>
+
+                    Cancel
+
+                </button>
+
+
+                <form asp-action="Delete"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           id="deleteId"
+                           name="id" />
+
+                    <button type="submit"
+                            class="btn btn-danger rounded-3 px-4">
+
+                        <i class="bi bi-trash3 me-1"></i>
+
+                        Yes, Delete
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        function setDeleteDetails(button) {
+
+            const id = button.getAttribute("data-id");
+
+            const name = button.getAttribute("data-name");
+
+            document.getElementById("deleteId").value = id;
+
+            document.getElementById("deletePositionName").textContent = name;
+
+        }
+
+    </script>
+
+}

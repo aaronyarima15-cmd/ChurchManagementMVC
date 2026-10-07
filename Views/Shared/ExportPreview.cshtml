@@ -1,0 +1,127 @@
+@model ChurchManagementMVC.ViewModels.PdfExportVM
+@using Microsoft.EntityFrameworkCore
+@using ChurchManagementMVC.Data
+@inject AppDbContext AppDbContext
+
+@{
+    Layout = null;
+    var fileName = Model.ReportTitle.Replace(" ", "_");
+    var churchProfile = await AppDbContext.ChurchProfiles.AsNoTracking().FirstOrDefaultAsync(p => p.Id == 1);
+    var churchName = churchProfile?.Name ?? "ECWA GIGINYU HAUSA SECTION";
+    var churchAddress = churchProfile?.Address ?? string.Empty;
+    var churchEmail = churchProfile?.Email ?? string.Empty;
+    var churchPhone = churchProfile?.Phone ?? string.Empty;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@fileName</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body { background: #eef2f5; color: #212529; }
+        .preview-page { max-width: 1100px; margin: 24px auto; padding: 36px; background: white; box-shadow: 0 2px 12px #0002; }
+        .editable { outline: 1px dashed #7a9; padding: 2px 4px; border-radius: 3px; }
+        .editable:focus { outline: 2px solid #0d6efd; background: #f2f7ff; }
+        .report-table { font-size: 13px; }
+        .report-table th, .report-table td { padding: 12px 16px !important; }
+        .church-contact { margin-top: 4px; font-size: 14px; }
+        .report-table th { background: #e8f3eb; }
+        .editor-toolbar { max-width: 1100px; margin: 20px auto 0; }
+        @@page { size: A4 landscape; margin: 14mm; }
+        @@media print {
+            body { background: white; }
+            .editor-toolbar { display: none !important; }
+            .preview-page { max-width: none; margin: 0; padding: 0; box-shadow: none; }
+            .editable { outline: none !important; padding: 0; }
+            thead { display: table-header-group; }
+            tr, h1, h2, h3 { break-inside: avoid; }
+            .report-section { break-inside: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-toolbar alert alert-info d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+            <strong>Review and edit this copy before downloading.</strong>
+            <div class="small">Click any dashed text or table cell to edit it. These edits do not change saved records.</div>
+            <div class="small">Choose <strong>Save as PDF</strong> in the next window to download your file.</div>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-success" onclick="downloadPdf()">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
+            </button>
+            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Back</button>
+        </div>
+    </div>
+
+    <main class="preview-page">
+        <header class="text-center border-bottom border-success border-3 pb-3 mb-4">
+            <h1 class="h2 fw-bold text-success">@churchName</h1>
+            <div class="church-contact">
+                @if (!string.IsNullOrWhiteSpace(churchAddress)) { <div>@churchAddress</div> }
+                @if (!string.IsNullOrWhiteSpace(churchEmail) || !string.IsNullOrWhiteSpace(churchPhone))
+                {
+                    <div>@churchEmail@if (!string.IsNullOrWhiteSpace(churchEmail) && !string.IsNullOrWhiteSpace(churchPhone)) { <text> | </text> }@churchPhone</div>
+                }
+            </div>
+            <h2 class="h4 fw-semibold editable" contenteditable="true" spellcheck="true">@Model.ReportTitle</h2>
+            @if (!string.IsNullOrWhiteSpace(Model.Subtitle))
+            {
+                <p class="text-muted mb-0 editable" contenteditable="true" spellcheck="true">@Model.Subtitle</p>
+            }
+        </header>
+
+        @foreach (var exportSection in Model.Sections)
+        {
+            <section class="report-section mb-4">
+                @if (!string.IsNullOrWhiteSpace(exportSection.Title))
+                {
+                    <h3 class="h5 fw-bold text-success editable" contenteditable="true">@exportSection.Title</h3>
+                }
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm report-table">
+                        <thead>
+                            <tr>
+                                @foreach (var heading in exportSection.Headers)
+                                {
+                                    <th class="editable" contenteditable="true">@heading</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in exportSection.Rows)
+                            {
+                                <tr>
+                                    @foreach (var cell in row)
+                                    {
+                                        <td class="editable" contenteditable="true">@cell</td>
+                                    }
+                                </tr>
+                            }
+                            @if (exportSection.Rows.Count == 0)
+                            {
+                                <tr><td class="text-center text-muted" colspan="@(exportSection.Headers.Count)">No records found.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        }
+        <footer class="text-center text-muted small border-top pt-2 mt-4">
+            <span class="editable" contenteditable="true">Generated @DateTime.Today.ToString("dd MMMM yyyy")</span>
+        </footer>
+    </main>
+
+    <script>
+        function downloadPdf() {
+            const churchName = document.querySelector('header h1').innerText.trim();
+            const reportTitle = document.querySelector('header h2').innerText.trim();
+            document.title = (churchName + ' - ' + reportTitle).replace(/[\\/:*?"<>|]/g, '-');
+            window.print();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,461 @@
+@model ChurchManagementMVC.Models.GroupManagement
+
+@{
+    ViewData["Title"] = Model.GroupName;
+}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <div class="d-flex align-items-center mb-2">
+
+                <a asp-action="Index"
+                   class="btn btn-sm btn-outline-success rounded-3 me-3">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Groups
+
+                </a>
+
+                <span class="text-muted">
+                    
+                </span>
+
+                <span class="ms-2 text-muted">
+                    Group Dashboard
+                </span>
+
+            </div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-people-fill me-2"></i>
+
+                @Model.GroupName
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                @if (!string.IsNullOrWhiteSpace(Model.Description))
+                {
+                    @Model.Description
+                }
+                else
+                {
+                    <span>
+                        Manage this church group.
+                    </span>
+                }
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-success rounded-3 px-4 shadow-sm">
+
+                <i class="bi bi-pencil-square me-2"></i>
+                Edit Group
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- GROUP INFORMATION -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="row g-4">
+
+                <!-- GROUP TYPE -->
+                <div class="col-md-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-diagram-3-fill fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Group Type
+                            </div>
+
+                            <div class="fw-semibold">
+
+                                @if (Model.GroupType != null)
+                                {
+                                    @Model.GroupType.Name
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        N/A
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MEETING ACTIVITY -->
+                <div class="col-md-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-calendar-event-fill fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Meeting Activity
+                            </div>
+
+                            @if (Model.Activity != null)
+                            {
+                                <div class="fw-semibold">
+                                    @Model.Activity.Day
+                                </div>
+
+                                <small class="text-muted">
+                                    @DateTime.Today.Add(Model.Activity.StartTime).ToString("h:mm tt")
+                                    -
+                                    @DateTime.Today.Add(Model.Activity.EndTime).ToString("h:mm tt")
+                                </small>
+                            }
+                            else
+                            {
+                                <div class="text-muted">
+                                    No activity
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DATE CREATED -->
+                <div class="col-md-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-calendar-check-fill fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Date Created
+                            </div>
+
+                            <div class="fw-semibold">
+                                @Model.DateCreated.ToLocalTime().ToString("dd MMM yyyy")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MANAGEMENT CARDS -->
+    <div class="row g-4">
+
+        <!-- MEMBERS -->
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="bg-success bg-opacity-10
+                        text-success rounded-circle
+                        d-flex align-items-center
+                        justify-content-center mb-3"
+                         style="width: 50px; height: 50px;">
+
+                        <i class="bi bi-person-lines-fill fs-5"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Members
+                    </h5>
+
+                    <p class="text-muted small mb-4">
+                        Manage members belonging to this group.
+                    </p>
+
+                    <a asp-controller="GroupMembers"
+                       asp-action="Index"
+                       asp-route-groupId="@Model.Id"
+                       class="btn btn-outline-success rounded-3 w-100">
+
+                        <i class="bi bi-people me-1"></i>
+                        Manage Members
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LEADERS -->
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="bg-success bg-opacity-10
+                        text-success rounded-circle
+                        d-flex align-items-center
+                        justify-content-center mb-3"
+                         style="width: 50px; height: 50px;">
+
+                        <i class="bi bi-person-badge-fill fs-5"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Leaders
+                    </h5>
+
+                    <p class="text-muted small mb-4">
+                        View and manage group leaders and roles.
+                    </p>
+
+                    <a asp-controller="GroupMembers"
+                       asp-action="Leaders"
+                       asp-route-groupId="@Model.Id"
+                       class="btn btn-outline-success rounded-3 w-100">
+
+                        <i class="bi bi-person-badge me-1"></i>
+                        Manage Leaders
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- COLLECTIONS -->
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="bg-success bg-opacity-10
+                        text-success rounded-circle
+                        d-flex align-items-center
+                        justify-content-center mb-3"
+                         style="width: 50px; height: 50px;">
+
+                        <i class="bi bi-cash-stack fs-5"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Collections
+                    </h5>
+
+                    <p class="text-muted small mb-4">
+                        View collections and income for this group.
+                    </p>
+
+                    <a asp-controller="Collections"
+                       asp-action="GroupCollections"
+                       asp-route-groupId="@Model.Id"
+                       class="btn btn-outline-success rounded-3 w-100">
+
+                        <i class="bi bi-wallet2 me-1"></i>
+                        Group Collections
+
+                    </a>
+                    <a asp-controller="Collections"
+                       asp-action="GroupMonthlyDues"
+                       asp-route-groupId="@Model.Id"
+                       class="btn btn-success rounded-3 w-100 mt-2">
+                        <i class="bi bi-calendar2-check me-1"></i>
+                        Monthly Member Dues
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EVENTS -->
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="bg-success bg-opacity-10
+                        text-success rounded-circle
+                        d-flex align-items-center
+                        justify-content-center mb-3"
+                         style="width: 50px; height: 50px;">
+
+                        <i class="bi bi-calendar2-event-fill fs-5"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+                        Events
+                    </h5>
+
+                    <p class="text-muted small mb-4">
+                        Manage events and activities for this group.
+                    </p>
+
+                    <a asp-controller="Events"
+                       asp-action="GroupEvents"
+                       asp-route-groupId="@Model.Id"
+                       class="btn btn-outline-success rounded-3 w-100">
+
+                        <i class="bi bi-calendar-event me-1"></i>
+                        Group Events
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+            <div class="card-body text-center">
+
+                <div class="bg-success bg-opacity-10 rounded-4 p-3 d-inline-block mb-3">
+
+                    <i class="bi bi-bar-chart-line text-success fs-3"></i>
+
+                </div>
+
+                <h5 class="fw-bold">
+                    Group Report
+                </h5>
+
+                <p class="text-muted small">
+                    View a complete summary of this group.
+                </p>
+
+                <a asp-controller="Groups"
+                   asp-action="Report"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-outline-success rounded-3 w-100">
+
+                    <i class="bi bi-bar-chart-line me-1"></i>
+                    View Report
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- GROUP MANAGEMENT -->
+    <div class="card shadow-sm border-0 rounded-4 mt-4">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-center">
+
+                <div class="bg-success bg-opacity-10
+                    text-success rounded-circle
+                    d-flex align-items-center
+                    justify-content-center me-3"
+                     style="width: 50px; height: 50px;">
+
+                    <i class="bi bi-bar-chart-fill fs-5"></i>
+
+                </div>
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        Group Management
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Members, leaders, collections, events and reports
+                        will be managed from this group dashboard.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

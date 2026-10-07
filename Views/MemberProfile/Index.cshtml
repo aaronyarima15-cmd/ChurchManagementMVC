@@ -1,0 +1,385 @@
+@model ChurchManagementMVC.Models.MembershipManagement
+
+@{
+    ViewData["Title"] = "My Profile";
+
+    // Build Full Name from First Name and Last Name
+    var fullName = string.Join(" ", new[] { Model.FirstName, Model.LastName, Model.OtherNames }.Where(name => !string.IsNullOrWhiteSpace(name)));
+}
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-person-circle me-2"></i>
+                My Profile
+            </h2>
+
+            <p class="text-muted mb-0">
+                View your church membership information.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         PROFILE CARD
+    ========================================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <!-- =====================================================
+                 PROFILE HEADER
+            ======================================================= -->
+
+            <div class="d-flex align-items-center mb-4">
+
+                @if (!string.IsNullOrWhiteSpace(Model.PhotoPath))
+                {
+                    <img src="@Model.PhotoPath"
+                         alt="@fullName"
+                         class="rounded-circle border shadow-sm me-3"
+                         style="width: 60px; height: 60px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="user-avatar me-3"
+                         style="width: 60px; height: 60px; font-size: 1.5rem;">
+
+                        <i class="bi bi-person-fill"></i>
+
+                    </div>
+                }
+
+                <div>
+
+                    <h4 class="fw-bold mb-1">
+                        @fullName
+                    </h4>
+
+                    <span class="text-muted">
+                        Church Member
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 PERSONAL INFORMATION
+            ======================================================= -->
+
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-person me-2"></i>
+                Personal Information
+            </h5>
+
+            <div class="row g-4 mb-4">
+
+                <!-- Full Name -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Full Name
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @fullName
+                    </div>
+
+                </div>
+
+
+                <!-- Gender -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Gender
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(string.IsNullOrWhiteSpace(Model.Gender)
+                            ? "Not provided"
+                            : Model.Gender)
+                    </div>
+
+                </div>
+
+
+                <!-- Date of Birth -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Date of Birth
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @Model.DateOfBirth.ToString("dd/MM/yyyy")
+                    </div>
+
+                </div>
+
+
+                <!-- Age -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Age
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @Model.Age years
+                    </div>
+
+                </div>
+
+
+                <!-- Marital Status -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Marital Status
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(Model.MaritalStatusDescription == "Not specified"
+                            ? "Not provided"
+                            : Model.MaritalStatusDescription)
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <div class="border rounded p-3 h-100">
+
+                        <small class="text-muted d-block mb-1">
+                            Baptized
+                        </small>
+
+                        @if (Model.IsBaptized)
+                        {
+                            <span class="badge bg-primary">
+                                <i class="bi bi-check-circle me-1"></i>
+                                Yes
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-x-circle me-1"></i>
+                                No
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="border rounded p-3 h-100">
+
+                        <small class="text-muted d-block mb-1">
+                            Membership Card Number
+                        </small>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.CardNumber))
+                        {
+                            <span class="fw-semibold">
+                                @Model.CardNumber
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Not assigned
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 CONTACT INFORMATION
+            ======================================================= -->
+
+            <h5 class="fw-bold mb-3 mt-4">
+                <i class="bi bi-telephone me-2"></i>
+                Contact Information
+            </h5>
+
+            <div class="row g-4 mb-4">
+
+                <!-- Phone -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Phone Number
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(string.IsNullOrWhiteSpace(Model.PhoneNumber)
+                            ? "Not provided"
+                            : Model.PhoneNumber)
+                    </div>
+
+                </div>
+
+
+                <!-- Email -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Email
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(string.IsNullOrWhiteSpace(Model.Email)
+                            ? "Not provided"
+                            : Model.Email)
+                    </div>
+
+                </div>
+
+
+                <!-- Home Address -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Home Address
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(string.IsNullOrWhiteSpace(Model.HomeAddress)
+                            ? "Not provided"
+                            : Model.HomeAddress)
+                    </div>
+
+                </div>
+
+
+                <!-- Permanent Address -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Permanent Address
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(string.IsNullOrWhiteSpace(Model.PermanentAddress)
+                            ? "Not provided"
+                            : Model.PermanentAddress)
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 LOCATION
+            ======================================================= -->
+
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-geo-alt me-2"></i>
+                Location
+            </h5>
+
+            <div class="row g-4 mb-4">
+
+                <!-- State -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        State
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(Model.State?.Name ?? "Not provided")
+                    </div>
+
+                </div>
+
+
+                <!-- LGA -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Local Government Area
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(Model.Lga?.Name ?? "Not provided")
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 MEMBERSHIP INFORMATION
+            ======================================================= -->
+
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-card-checklist me-2"></i>
+                Membership Information
+            </h5>
+
+            <div class="row g-4">
+
+                <!-- Relationship -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Relationship
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(Model.Relationship?.Name ?? "Not provided")
+                    </div>
+
+                </div>
+
+
+                <!-- Membership Status -->
+                <div class="col-md-6">
+
+                    <label class="form-label fw-semibold">
+                        Membership Status
+                    </label>
+
+                    <div class="form-control bg-light">
+                        @(Model.Status?.StatusName ?? "Not provided")
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

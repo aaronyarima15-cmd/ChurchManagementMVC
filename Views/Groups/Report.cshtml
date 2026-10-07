@@ -1,0 +1,620 @@
+@{
+    ViewData["Title"] = "Group Report";
+
+    var group =
+        ViewBag.Group as ChurchManagementMVC.Models.GroupManagement;
+
+    var members =
+        ViewBag.Members as List<ChurchManagementMVC.Models.GroupMember>
+        ?? new List<ChurchManagementMVC.Models.GroupMember>();
+
+    var collections =
+        ViewBag.Collections as List<ChurchManagementMVC.Models.ChurchCollectionManagement>
+        ?? new List<ChurchManagementMVC.Models.ChurchCollectionManagement>();
+
+    var events =
+        ViewBag.Events as List<ChurchManagementMVC.Models.EventManagement>
+        ?? new List<ChurchManagementMVC.Models.EventManagement>();
+
+    var leaders =
+        members
+            .Where(m =>
+                !string.Equals(
+                    m.Role,
+                    "Member",
+                    StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+    var upcomingEvents =
+        events
+            .Where(e => e.EventDate.Date >= DateTime.Today)
+            .OrderBy(e => e.EventDate)
+            .ThenBy(e => e.EventTime)
+            .Take(5)
+            .ToList();
+
+    var recentMembers =
+        members
+            .OrderByDescending(m => m.DateJoined)
+            .Take(5)
+            .ToList();
+
+    var recentCollections =
+        collections
+            .OrderByDescending(c => c.CollectionDate)
+            .Take(5)
+            .ToList();
+
+    var totalAmount =
+        collections.Sum(c => c.Amount);
+}
+
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================================
+         REPORT HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <div class="d-flex align-items-center gap-2 mb-2">
+
+                <a asp-controller="Groups"
+                   asp-action="Manage"
+                   asp-route-id="@group?.Id"
+                   class="btn btn-light border rounded-3">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Back to Group
+
+                </a>
+
+            </div>
+
+            <h3 class="fw-bold mb-1">
+
+                <i class="bi bi-bar-chart-line text-success me-2"></i>
+                Group Report
+
+            </h3>
+
+            <p class="text-muted mb-0">
+
+                Summary report for
+                <strong>@group?.GroupName</strong>
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a asp-action="ExportReportToExcel"
+               asp-route-id="@group?.Id"
+               class="btn btn-success rounded-3 px-4">
+                <i class="bi bi-file-earmark-excel me-1"></i>
+                Export to Excel
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         GROUP INFORMATION
+    ========================================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <small class="text-muted">
+                        Group Name
+                    </small>
+
+                    <h5 class="fw-bold mb-0">
+                        @group?.GroupName
+                    </h5>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <small class="text-muted">
+                        Group Type
+                    </small>
+
+                    <h5 class="fw-bold mb-0">
+                        @group?.GroupType?.Name
+                    </h5>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <small class="text-muted">
+                        Date Created
+                    </small>
+
+                    <h5 class="fw-bold mb-0">
+
+                        @group?.DateCreated.ToString("dd MMM yyyy")
+
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         SUMMARY CARDS
+    ========================================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- MEMBERS -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-primary bg-opacity-10 rounded-4 p-3 me-3">
+
+                            <i class="bi bi-people text-primary fs-3"></i>
+
+                        </div>
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Members
+                            </small>
+
+                            <h4 class="fw-bold mb-0">
+                                @members.Count
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LEADERS -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-warning bg-opacity-10 rounded-4 p-3 me-3">
+
+                            <i class="bi bi-person-badge text-warning fs-3"></i>
+
+                        </div>
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Leaders
+                            </small>
+
+                            <h4 class="fw-bold mb-0">
+                                @leaders.Count
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- COLLECTIONS -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10 rounded-4 p-3 me-3">
+
+                            <i class="bi bi-wallet2 text-success fs-3"></i>
+
+                        </div>
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Collections
+                            </small>
+
+                            <h4 class="fw-bold mb-0">
+
+                                ₦@totalAmount.ToString("N2")
+
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EVENTS -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-info bg-opacity-10 rounded-4 p-3 me-3">
+
+                            <i class="bi bi-calendar-event text-info fs-3"></i>
+
+                        </div>
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Events
+                            </small>
+
+                            <h4 class="fw-bold mb-0">
+                                @events.Count
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- =====================================================
+             RECENT MEMBERS
+        ====================================================== -->
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+
+                        <i class="bi bi-people text-success me-2"></i>
+                        Recent Members
+
+                    </h5>
+
+
+                    @if (recentMembers.Any())
+                    {
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle">
+
+                                <thead class="table-light">
+
+                                    <tr>
+                                        <th>Member</th>
+                                        <th>Role</th>
+                                        <th>Date Joined</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach (var member in recentMembers)
+                                    {
+                                        <tr>
+
+                                            <td>
+
+                                                @member.Member?.FirstName
+                                                @member.Member?.LastName
+
+                                            </td>
+
+                                            <td>
+                                                @member.Role
+                                            </td>
+
+                                            <td>
+                                                @member.DateJoined.ToString("dd MMM yyyy")
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            No members have been added yet.
+                        </p>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             UPCOMING EVENTS
+        ====================================================== -->
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+
+                        <i class="bi bi-calendar-event text-success me-2"></i>
+                        Upcoming Events
+
+                    </h5>
+
+
+                    @if (upcomingEvents.Any())
+                    {
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle">
+
+                                <thead class="table-light">
+
+                                    <tr>
+                                        <th>Event</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach (var ev in upcomingEvents)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @ev.EventName
+                                            </td>
+
+                                            <td>
+                                                @ev.EventDate.ToString("dd MMM yyyy")
+                                            </td>
+
+                                            <td>
+                                                @ev.EventTime.ToString(@"hh\:mm")
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            No upcoming events.
+                        </p>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             RECENT COLLECTIONS
+        ====================================================== -->
+
+        <div class="col-12">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+
+                        <i class="bi bi-wallet2 text-success me-2"></i>
+                        Recent Collections
+
+                    </h5>
+
+
+                    @if (recentCollections.Any())
+                    {
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle">
+
+                                <thead class="table-light">
+
+                                    <tr>
+
+                                        <th>Date</th>
+                                        <th>Collection Type</th>
+                                        <th>Payment Method</th>
+                                        <th class="text-end">
+                                            Amount
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach (var collection in recentCollections)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @collection.CollectionDate.ToString("dd MMM yyyy")
+                                            </td>
+
+                                            <td>
+                                                @collection.CollectionType?.Name
+                                            </td>
+
+                                            <td>
+                                                @collection.PaymentMethod?.Name
+                                            </td>
+
+                                            <td class="text-end fw-semibold">
+
+                                                ₦@collection.Amount.ToString("N2")
+
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            No collections have been recorded yet.
+                        </p>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         REPORT FOOTER
+    ========================================================== -->
+
+    <div class="text-center text-muted small mt-4">
+
+        <p class="mb-0">
+            Church Management System
+        </p>
+
+        <p class="mb-0">
+            Group Report — @DateTime.Today.ToString("dd MMM yyyy")
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =============================================================
+     PRINT STYLING
+============================================================== -->
+
+<style>
+
+    @@media print {
+        body {
+            background: white !important;
+        }
+
+        .sidebar,
+        .navbar,
+        nav,
+        header,
+        footer,
+        .btn {
+            display: none !important;
+        }
+
+        .container-fluid {
+            width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+
+        .table {
+            font-size: 12px;
+        }
+    }
+
+</style>

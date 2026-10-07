@@ -1,0 +1,540 @@
+@model List<ChurchManagementMVC.Models.ChurchCollectionManagement>
+
+@{
+    ViewData["Title"] = "Group Collections";
+
+    var group = ViewBag.Group as ChurchManagementMVC.Models.GroupManagement;
+
+    decimal totalAmount = Model.Sum(x => x.Amount);
+}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <div class="d-flex align-items-center mb-2">
+
+                <a asp-controller="Groups"
+                   asp-action="Manage"
+                   asp-route-id="@group?.Id"
+                   class="btn btn-sm btn-outline-success rounded-3 me-3">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Group Dashboard
+
+                </a>
+
+                <span class="text-muted">/</span>
+
+                <span class="ms-2 text-muted">
+                    Collections
+                </span>
+
+            </div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-cash-stack me-2"></i>
+
+                Group Collections
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                @if (group != null)
+                {
+                    <span>
+                        Collections recorded for
+                        <strong>@group.GroupName</strong>.
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        Collections recorded for this group.
+                    </span>
+                }
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a asp-action="CreateGroupCollection"
+               asp-route-groupId="@group?.Id"
+               class="btn btn-success rounded-3 px-4 shadow-sm">
+
+                <i class="bi bi-plus-circle me-2"></i>
+
+                Add Collection
+
+            </a>
+            <a asp-action="GroupMonthlyDues"
+               asp-route-groupId="@group?.Id"
+               class="btn btn-outline-success rounded-3 px-4 shadow-sm ms-2">
+                <i class="bi bi-calendar2-check me-2"></i>
+                Monthly Dues
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+    <div class="row g-4 mb-4">
+
+        <!-- TOTAL COLLECTIONS -->
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-receipt fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Total Collections
+                            </div>
+
+                            <h4 class="fw-bold mb-0">
+                                @Model.Count
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL AMOUNT -->
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-cash-coin fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Total Amount
+                            </div>
+
+                            <h4 class="fw-bold mb-0">
+                                ₦@totalAmount.ToString("N2")
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- GROUP -->
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-people-fill fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Group
+                            </div>
+
+                            <h5 class="fw-bold mb-0">
+
+                                @if (group != null)
+                                {
+                                    @group.GroupName
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        N/A
+                                    </span>
+                                }
+
+                            </h5>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- COLLECTIONS TABLE -->
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body p-0">
+
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-4">
+                                    Date
+                                </th>
+
+                                <th>
+                                    Collection Type
+                                </th>
+
+                                <th>
+                                    Amount
+                                </th>
+
+                                <th>
+                                    Payment Method
+                                </th>
+
+                                <th>
+                                    Notes
+                                </th>
+
+                                <th class="text-end px-4">
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var collection in Model)
+                            {
+                                <tr>
+
+                                    <!-- DATE -->
+                                    <td class="px-4">
+
+                                        <div class="fw-semibold">
+
+                                            @collection.CollectionDate
+                                            .ToString("dd MMM yyyy")
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- COLLECTION TYPE -->
+                                    <td>
+
+                                        @if (collection.CollectionType != null)
+                                        {
+                                            <span class="fw-semibold">
+
+                                                @collection.CollectionType.Name
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                N/A
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- AMOUNT -->
+                                    <td>
+
+                                        <span class="fw-bold text-success">
+
+                                            ₦@collection.Amount.ToString("N2")
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- PAYMENT METHOD -->
+                                    <td>
+
+                                        @if (collection.PaymentMethod != null)
+                                        {
+                                            <span>
+
+                                                @collection.PaymentMethod.Name
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                N/A
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- NOTES -->
+                                    <td>
+
+                                        @if (!string.IsNullOrWhiteSpace(
+                                            collection.Notes))
+                                        {
+                                            <span>
+                                                @collection.Notes
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- ACTIONS -->
+                                    <td class="text-end px-4">
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@collection.Id"
+                                           class="btn btn-sm btn-outline-success rounded-3 me-1">
+
+                                            <i class="bi bi-pencil-square"></i>
+
+                                        </a>
+
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger rounded-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal-@collection.Id">
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </button>
+
+
+                                        <!-- DELETE MODAL -->
+                                        <div class="modal fade"
+                                             id="deleteModal-@collection.Id"
+                                             tabindex="-1"
+                                             aria-hidden="true">
+
+                                            <div class="modal-dialog modal-dialog-centered">
+
+                                                <div class="modal-content border-0 rounded-4 shadow">
+
+                                                    <div class="modal-header">
+
+                                                        <h5 class="modal-title fw-bold">
+
+                                                            <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+
+                                                            Confirm Delete
+
+                                                        </h5>
+
+                                                        <button type="button"
+                                                                class="btn-close"
+                                                                data-bs-dismiss="modal">
+                                                        </button>
+
+                                                    </div>
+
+
+                                                    <div class="modal-body text-start">
+
+                                                        <p class="mb-2">
+
+                                                            Are you sure you want to delete this collection?
+
+                                                        </p>
+
+                                                        <div class="bg-light rounded-3 p-3">
+
+                                                            <div class="fw-semibold">
+
+                                                                @collection.CollectionType?.Name
+
+                                                            </div>
+
+                                                            <div class="text-muted">
+
+                                                                ₦@collection.Amount.ToString("N2")
+
+                                                            </div>
+
+                                                            <div class="text-muted">
+
+                                                                @collection.CollectionDate.ToString("dd MMM yyyy")
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="modal-footer">
+
+                                                        <button type="button"
+                                                                class="btn btn-outline-secondary rounded-3"
+                                                                data-bs-dismiss="modal">
+
+                                                            Cancel
+
+                                                        </button>
+
+
+                                                        <form asp-action="Delete"
+                                                              method="post"
+                                                              class="d-inline">
+
+                                                            @Html.AntiForgeryToken()
+
+                                                            <input type="hidden"
+                                                                   name="id"
+                                                                   value="@collection.Id" />
+
+                                                            <button type="submit"
+                                                                    class="btn btn-danger rounded-3">
+
+                                                                <i class="bi bi-trash me-1"></i>
+
+                                                                Delete
+
+                                                            </button>
+
+                                                        </form>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <!-- EMPTY STATE -->
+
+                <div class="text-center py-5 px-4">
+
+                    <div class="bg-success bg-opacity-10
+                        text-success rounded-circle
+                        d-flex align-items-center
+                        justify-content-center mx-auto mb-3"
+                         style="width: 70px; height: 70px;">
+
+                        <i class="bi bi-cash-stack fs-3"></i>
+
+                    </div>
+
+                    <h5 class="fw-bold">
+                        No Collections Yet
+                    </h5>
+
+                    <p class="text-muted mb-4">
+
+                        No collections have been recorded
+                        for this group yet.
+
+                    </p>
+
+                    <a asp-action="CreateGroupCollection"
+                       asp-route-groupId="@group?.Id"
+                       class="btn btn-success rounded-3 px-4">
+
+                        <i class="bi bi-plus-circle me-1"></i>
+
+                        Add First Collection
+
+                    </a>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

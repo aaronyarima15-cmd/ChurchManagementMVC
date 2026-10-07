@@ -1,0 +1,169 @@
+﻿@model ChurchManagementMVC.Models.ExpenditureType
+
+@{
+    ViewData["Title"] = "Edit Expenditure Type";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-pencil-square me-2"></i>
+                Edit Expenditure Type
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update the expenditure type information.
+            </p>
+        </div>
+
+        <div>
+            <a asp-action="Index"
+               class="btn btn-outline-secondary rounded-3 px-4">
+
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to Expenditure Types
+
+            </a>
+        </div>
+
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-8 col-lg-9 col-md-10">
+
+            <div class="card shadow-sm border-0 rounded-4">
+
+                <!-- CARD HEADER -->
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-pencil-square fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                Expenditure Type Information
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Update the details of this expenditure category.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CARD BODY -->
+                <div class="card-body p-4">
+
+                    <!-- VALIDATION -->
+                    <div asp-validation-summary="ModelOnly"
+                         class="alert alert-danger border-0 rounded-3 mb-4">
+                    </div>
+
+                    <form asp-action="Edit" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               asp-for="ExpenditureTypeId" />
+
+                        <input type="hidden"
+                               asp-for="DateCreated" />
+
+                        <!-- EXPENDITURE TYPE -->
+                        <div class="mb-4">
+
+                            <label asp-for="TypeName"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-tag-fill me-1"></i>
+                                Expenditure Type
+
+                            </label>
+
+                            <input asp-for="TypeName"
+                                   class="form-control form-control-lg rounded-3"
+                                   placeholder="Enter expenditure type" />
+
+                            <span asp-validation-for="TypeName"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+                        <!-- DATE CREATED -->
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+
+                                <i class="bi bi-calendar-event me-1"></i>
+                                Date Created
+
+                            </label>
+
+                            <input value="@Model.DateCreated.ToString("dd MMM yyyy")"
+                                   class="form-control form-control-lg rounded-3"
+                                   readonly />
+
+                            <div class="form-text">
+                                The creation date cannot be changed.
+                            </div>
+
+                        </div>
+
+                        <!-- BUTTONS -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <a asp-action="Index"
+                               class="btn btn-outline-secondary rounded-3 px-4">
+
+                                <i class="bi bi-x-circle me-1"></i>
+                                Cancel
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success rounded-3 px-4 shadow-sm">
+
+                                <i class="bi bi-save-fill me-1"></i>
+                                Save Changes
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

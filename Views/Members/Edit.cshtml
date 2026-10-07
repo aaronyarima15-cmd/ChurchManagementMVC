@@ -1,0 +1,870 @@
+@model ChurchManagementMVC.Models.MembershipManagement
+
+@{
+    ViewData["Title"] = "Edit Member";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-person-fill-gear text-success me-2"></i>
+                Edit Member
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update member information.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Members
+        </a>
+
+    </div>
+
+
+    <!-- =========================================================
+         FORM
+    ========================================================== -->
+
+    <form asp-action="Edit"
+          method="post"
+          enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+
+        <input asp-for="Id" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3">
+        </div>
+
+
+        <!-- =====================================================
+             MEMBER PHOTO
+        ====================================================== -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-camera-fill me-2"></i>
+                    Member Photo
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row align-items-center">
+
+                    <!-- PHOTO -->
+
+                    <div class="col-md-3 text-center mb-3 mb-md-0">
+
+                        <div id="photoPreviewContainer"
+                             class="d-flex justify-content-center">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.PhotoPath))
+                            {
+                                <img id="photoPreview"
+                                     src="@Model.PhotoPath"
+                                     alt="Member Photo"
+                                     class="rounded-circle border shadow-sm"
+                                     style="width: 150px; height: 150px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div id="photoPlaceholder"
+                                     class="rounded-circle bg-light border d-flex align-items-center justify-content-center"
+                                     style="width: 150px; height: 150px;">
+
+                                    <i class="bi bi-person-fill text-secondary"
+                                       style="font-size: 70px;">
+                                    </i>
+
+                                </div>
+
+                                <img id="photoPreview"
+                                     src="#"
+                                     alt="Member Photo Preview"
+                                     class="rounded-circle border shadow-sm d-none"
+                                     style="width: 150px; height: 150px; object-fit: cover;" />
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PHOTO INPUT -->
+
+                    <div class="col-md-9">
+
+                        <label for="photo"
+                               class="form-label fw-semibold">
+                            Change Member Photo
+                        </label>
+
+                        <input type="file"
+                               id="photo"
+                               name="photo"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.webp" />
+
+                        <div class="form-text">
+                            Select a new JPG, JPEG, PNG or WEBP image.
+                            Maximum size: 5 MB.
+                        </div>
+
+                        <span asp-validation-for="PhotoPath"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PERSONAL INFORMATION
+        ====================================================== -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-person-vcard-fill me-2"></i>
+                    Personal Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <!-- FIRST NAME -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="FirstName"
+                               class="form-label fw-semibold">
+                            First Name
+                        </label>
+
+                        <input asp-for="FirstName"
+                               class="form-control"
+                               placeholder="Enter first name" />
+
+                        <span asp-validation-for="FirstName"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- SURNAME -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="LastName"
+                               class="form-label fw-semibold">
+                            Surname
+                        </label>
+
+                        <input asp-for="LastName"
+                               class="form-control"
+                               placeholder="Enter surname" />
+
+                        <span asp-validation-for="LastName"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- OTHER NAMES -->
+
+                    <div class="col-md-6">
+                        <label asp-for="OtherNames" class="form-label fw-semibold">Other Name(s)</label>
+                        <input asp-for="OtherNames" class="form-control" placeholder="Enter other name(s)" />
+                    </div>
+
+                    <!-- DATE OF BIRTH -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="DateOfBirth"
+                               class="form-label fw-semibold">
+                            Date of Birth
+                        </label>
+
+                        <input asp-for="DateOfBirth"
+                               type="date"
+                               class="form-control" />
+
+                        <span asp-validation-for="DateOfBirth"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- AGE -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Age
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="@Model.Age"
+                               readonly />
+
+                    </div>
+
+
+                    <!-- GENDER -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Gender"
+                               class="form-label fw-semibold">
+                            Gender
+                        </label>
+
+                        <select asp-for="Gender"
+                                class="form-select">
+
+                            <option value="">
+                                Select Gender
+                            </option>
+
+                            <option value="Male">
+                                Male
+                            </option>
+
+                            <option value="Female">
+                                Female
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="Gender"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- MARITAL STATUS -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="MaritalStatus"
+                               class="form-label fw-semibold">
+                            Marital Status
+                        </label>
+
+                        <select asp-for="MaritalStatus"
+                                class="form-select">
+
+                            <option value="">
+                                Select Marital Status
+                            </option>
+
+                            <option value="1">
+                                Single
+                            </option>
+
+                            <option value="2">
+                                Married
+                            </option>
+
+                            <option value="3">
+                                Divorced
+                            </option>
+
+                            <option value="4">
+                                Widower
+                            </option>
+
+                            <option value="5">
+                                Widow
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="MaritalStatus"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             CONTACT INFORMATION
+        ====================================================== -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-telephone-fill me-2"></i>
+                    Contact Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <!-- PHONE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="PhoneNumber"
+                               class="form-label fw-semibold">
+                            Phone Number
+                        </label>
+
+                        <input asp-for="PhoneNumber"
+                               class="form-control"
+                               placeholder="Enter phone number" />
+
+                        <span asp-validation-for="PhoneNumber"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Email"
+                               class="form-label fw-semibold">
+                            Email Address
+                        </label>
+
+                        <input asp-for="Email"
+                               type="email"
+                               class="form-control"
+                               placeholder="Enter email address" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- HOME ADDRESS -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="HomeAddress"
+                               class="form-label fw-semibold">
+                            Home Address
+                        </label>
+
+                        <textarea asp-for="HomeAddress"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Enter home address">
+                        </textarea>
+
+                        <span asp-validation-for="HomeAddress"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- PERMANENT ADDRESS -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="PermanentAddress"
+                               class="form-label fw-semibold">
+                            Permanent Address
+                        </label>
+
+                        <textarea asp-for="PermanentAddress"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Enter permanent address">
+                        </textarea>
+
+                        <span asp-validation-for="PermanentAddress"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             LOCATION INFORMATION
+        ====================================================== -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-geo-alt-fill me-2"></i>
+                    Location Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <!-- STATE -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="StateId"
+                               class="form-label fw-semibold">
+                            State
+                        </label>
+
+                        <select asp-for="StateId"
+                                class="form-select"
+                                id="StateId">
+
+                            <option value="">
+                                Select State
+                            </option>
+
+                            @if (ViewBag.States != null)
+                            {
+                                foreach (var state in ViewBag.States)
+                                {
+                                    <option value="@state.StateId">
+                                        @state.Name
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="StateId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- LGA -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="LgaId"
+                               class="form-label fw-semibold">
+                            LGA
+                        </label>
+
+                        <select asp-for="LgaId"
+                                class="form-select"
+                                id="LgaId">
+
+                            <option value="">
+                                Select LGA
+                            </option>
+
+                            @if (ViewBag.Lgas != null)
+                            {
+                                foreach (var lga in ViewBag.Lgas)
+                                {
+                                    <option value="@lga.LgaId">
+                                        @lga.Name
+                                    </option>
+                                }
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="LgaId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MEMBERSHIP INFORMATION
+        ====================================================== -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-card-checklist me-2"></i>
+                    Membership Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <!-- RELATIONSHIP -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="RelationshipId"
+                               class="form-label fw-semibold">
+                            Relationship
+                        </label>
+
+                        <select asp-for="RelationshipId"
+                                class="form-select"
+                                asp-items="ViewBag.Relationships">
+
+                            <option value="">
+                                Select Relationship
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="RelationshipId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- MEMBERSHIP STATUS -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="StatusId"
+                               class="form-label fw-semibold">
+                            Membership Status
+                        </label>
+
+                        <select asp-for="StatusId"
+                                class="form-select"
+                                asp-items="ViewBag.Statuses">
+
+                            <option value="">
+                                Select Membership Status
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="StatusId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- BAPTIZED -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold d-block">
+                            Baptized
+                        </label>
+
+                        <div class="form-check form-switch">
+
+                            <input asp-for="IsBaptized"
+                                   class="form-check-input"
+                                   id="IsBaptized" />
+
+                            <label class="form-check-label"
+                                   for="IsBaptized">
+                                Member is baptized
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CARD NUMBER -->
+
+                    <div class="col-md-6"
+                         id="cardNumberContainer">
+
+                        <label asp-for="CardNumber"
+                               class="form-label fw-semibold">
+                            Card Number
+                        </label>
+
+                        <input asp-for="CardNumber"
+                               class="form-control"
+                               placeholder="Enter member card number" />
+
+                        <span asp-validation-for="CardNumber"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             BUTTONS
+        ====================================================== -->
+
+        <div class="d-flex justify-content-end gap-2 mb-4">
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bi bi-x-circle me-1"></i>
+                Cancel
+
+            </a>
+
+            <button type="submit"
+                    class="btn btn-success">
+
+                <i class="bi bi-save me-1"></i>
+                Save Changes
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =============================================================
+     JAVASCRIPT
+============================================================== -->
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+
+    <script>
+
+        // =========================================================
+        // MEMBER PHOTO PREVIEW
+        // =========================================================
+
+        document
+            .getElementById("photo")
+            .addEventListener("change", function(event) {
+
+                const file =
+                    event.target.files[0];
+
+                const preview =
+                    document.getElementById("photoPreview");
+
+                const placeholder =
+                    document.getElementById("photoPlaceholder");
+
+                if (!file) {
+                    return;
+                }
+
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+
+                    alert(
+                        "Please select a JPG, JPEG, PNG or WEBP image."
+                    );
+
+                    event.target.value = "";
+
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+
+                    alert(
+                        "The selected photo is larger than 5 MB."
+                    );
+
+                    event.target.value = "";
+
+                    return;
+                }
+
+                const reader =
+                    new FileReader();
+
+                reader.onload = function(e) {
+
+                    preview.src =
+                        e.target.result;
+
+                    preview.classList.remove(
+                        "d-none");
+
+                    if (placeholder) {
+
+                        placeholder.classList.add(
+                            "d-none");
+                    }
+                };
+
+                reader.readAsDataURL(file);
+
+            });
+
+
+        // =========================================================
+        // LOAD LGAs WHEN STATE CHANGES
+        // =========================================================
+
+        document
+            .getElementById("StateId")
+            .addEventListener("change", function() {
+
+                const stateId =
+                    this.value;
+
+                const lgaSelect =
+                    document.getElementById("LgaId");
+
+                lgaSelect.innerHTML =
+                    '<option value="">Select LGA</option>';
+
+                if (!stateId) {
+                    return;
+                }
+
+                fetch(
+                    '@Url.Action("GetLgasByState", "Members")?stateId='
+                    + stateId
+                )
+                    .then(response =>
+                        response.json())
+                    .then(data => {
+
+                        data.forEach(function(lga) {
+
+                            const option =
+                                document.createElement("option");
+
+                            option.value =
+                                lga.lgaId;
+
+                            option.textContent =
+                                lga.name;
+
+                            lgaSelect.appendChild(
+                                option);
+
+                        });
+
+                    })
+                    .catch(error => {
+
+                        console.error(
+                            "Error loading LGAs:",
+                            error);
+
+                    });
+
+            });
+
+
+        // =========================================================
+        // BAPTIZED / CARD NUMBER
+        // =========================================================
+
+        function updateCardNumberVisibility() {
+
+            const baptized =
+                document.getElementById(
+                    "IsBaptized");
+
+            const cardContainer =
+                document.getElementById(
+                    "cardNumberContainer");
+
+            const cardInput =
+                document.getElementById(
+                    "CardNumber");
+
+            if (baptized.checked) {
+
+                cardContainer.style.display =
+                    "block";
+
+                cardInput.required =
+                    true;
+
+            }
+            else {
+
+                cardContainer.style.display =
+                    "block";
+
+                cardInput.required =
+                    false;
+
+                cardInput.value =
+                    "";
+
+            }
+        }
+
+
+        document
+            .getElementById("IsBaptized")
+            .addEventListener(
+                "change",
+                updateCardNumberVisibility);
+
+
+        updateCardNumberVisibility();
+
+    </script>
+}

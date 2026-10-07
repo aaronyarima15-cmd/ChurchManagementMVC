@@ -1,0 +1,193 @@
+﻿@model ChurchManagementMVC.Models.CommunionService
+
+@{
+    ViewData["Title"] = "New Holy Communion Attendance";
+}
+
+<div class="container-fluid py-4">
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-cup-hot text-success me-2"></i>
+                New Holy Communion Attendance
+            </h2>
+
+            <p class="text-muted mb-0">
+                Record a new Holy Communion Attendance.
+            </p>
+        </div>
+
+        <div>
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Communion
+
+            </a>
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 py-3">
+
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-calendar-check text-success me-2"></i>
+                Communion Attendance Information
+            </h5>
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <form asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger">
+                </div>
+
+                <div class="row g-4">
+
+
+                    <div class="col-md-6">
+
+                        <label asp-for="CommunionDate"
+                               class="form-label fw-semibold">
+                            Communion Date
+                        </label>
+
+                        <input asp-for="CommunionDate"
+                               type="date"
+                               class="form-control"
+                               required />
+
+                        <span asp-validation-for="CommunionDate"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label asp-for="ServiceType"
+                               class="form-label fw-semibold">
+                            Service Type
+                        </label>
+
+                        <select asp-for="ServiceType"
+                                class="form-select"
+                                required>
+
+                            <option value="">
+                                -- Select Service --
+                            </option>
+
+                            <option value="Sunday Service">
+                                Sunday Service
+                            </option>
+
+                            <option value="Special Service">
+                                Special Service
+                            </option>
+
+                            <option value="Christmas Service">
+                                Christmas Service
+                            </option>
+
+                            <option value="Easter Service">
+                                Easter Service
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="ServiceType"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Minister"
+                               class="form-label fw-semibold">
+                            Minister
+                        </label>
+
+                        <input asp-for="Minister"
+                               class="form-control"
+                               placeholder="Enter minister's name" />
+
+                        <span asp-validation-for="Minister"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <label asp-for="Remarks"
+                               class="form-label fw-semibold">
+                            Remarks
+                        </label>
+
+                        <textarea asp-for="Remarks"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Enter any additional remarks...">
+                        </textarea>
+
+                        <span asp-validation-for="Remarks"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+
+                        <i class="bi bi-x-circle me-1"></i>
+                        Cancel
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-success">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        Save Communion Service
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,54 @@
+@model ChurchManagementMVC.Models.MembershipManagement
+@{ ViewData["Title"] = "Member Registration"; }
+<div class="container py-4" style="max-width: 900px;">
+    <div class="card shadow-sm">
+        <div class="card-header text-center bg-success text-white py-4">
+            <h1 class="h3 mb-1">ECWA GIGINYU HAUSA SECTION</h1>
+            <p class="mb-0">Member Information Form</p>
+        </div>
+        <div class="card-body p-4">
+            <p>Please complete the form below. Your age is worked out from your date of birth.</p>
+            <form asp-action="Index" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <h2 class="h5 mt-3">Names</h2>
+                <div class="row g-3">
+                    <div class="col-md-4"><label asp-for="FirstName" class="form-label">Your name *</label><input asp-for="FirstName" class="form-control" autocomplete="given-name"/><span asp-validation-for="FirstName" class="text-danger"></span></div>
+                    <div class="col-md-4"><label asp-for="FatherName" class="form-label">Father's name *</label><input asp-for="FatherName" class="form-control"/><span asp-validation-for="FatherName" class="text-danger"></span></div>
+                    <div class="col-md-4"><label asp-for="GrandfatherName" class="form-label">Grandfather's name (optional)</label><input asp-for="GrandfatherName" class="form-control"/></div>
+                    <div class="col-md-4"><label asp-for="OtherNames" class="form-label">Other name(s)</label><input asp-for="OtherNames" class="form-control"/></div>
+                    
+                    <div class="col-md-6"><label asp-for="DateOfBirth" class="form-label">Date of birth *</label><input asp-for="DateOfBirth" type="date" class="form-control"/><span asp-validation-for="DateOfBirth" class="text-danger"></span></div>
+                    <div class="col-md-4"><label class="form-label">Age</label><input id="ageDisplay" class="form-control" readonly placeholder="Calculated from date of birth"/></div>
+                    <div class="col-md-4"><label asp-for="Gender" class="form-label">Gender</label><select asp-for="Gender" class="form-select"><option value="">Choose...</option><option>Male</option><option>Female</option></select></div>
+                    <div class="col-md-4"><label asp-for="MaritalStatus" class="form-label">Marital status</label><select asp-for="MaritalStatus" asp-items="Html.GetEnumSelectList<ChurchManagementMVC.Models.MaritalStatusEnum>()" class="form-select"><option value="">Choose...</option></select></div>
+                    <div class="col-md-6"><label asp-for="RelationshipId" class="form-label">Relationship *</label><select asp-for="RelationshipId" asp-items="ViewBag.Relationships" class="form-select"><option value="">Choose...</option></select><span asp-validation-for="RelationshipId" class="text-danger"></span></div>
+                    <div class="col-md-6"><label asp-for="StatusId" class="form-label">Status *</label><select asp-for="StatusId" asp-items="ViewBag.Statuses" class="form-select"><option value="">Choose...</option></select><span asp-validation-for="StatusId" class="text-danger"></span></div>
+                    <div class="col-md-6"><label asp-for="IsBaptized" class="form-label">Baptized?</label><select asp-for="IsBaptized" class="form-select"><option value="false">No</option><option value="true">Yes</option></select></div>
+                    <div class="col-md-6"><label asp-for="CardNumber" class="form-label">Card number (if baptized)</label><input asp-for="CardNumber" class="form-control"/></div>
+                </div>
+                <h2 class="h5 mt-4">Contact and address</h2>
+                <div class="row g-3">
+                    <div class="col-md-6"><label asp-for="PhoneNumber" class="form-label">Phone number *</label><input asp-for="PhoneNumber" class="form-control" autocomplete="tel"/><span asp-validation-for="PhoneNumber" class="text-danger"></span></div>
+                    <div class="col-md-6"><label asp-for="Email" class="form-label">Email address</label><input asp-for="Email" type="email" class="form-control" autocomplete="email"/></div>
+                    <div class="col-12"><label asp-for="HomeAddress" class="form-label">Home address</label><textarea asp-for="HomeAddress" class="form-control" rows="2"></textarea></div>
+                    <div class="col-12"><label asp-for="PermanentAddress" class="form-label">Permanent address</label><textarea asp-for="PermanentAddress" class="form-control" rows="2"></textarea></div>
+                    <div class="col-md-6"><label asp-for="StateId" class="form-label">State</label><select asp-for="StateId" asp-items="ViewBag.States" class="form-select" id="StateId"><option value="">Choose...</option></select></div>
+                    <div class="col-md-6"><label asp-for="LgaId" class="form-label">Local government area</label><select asp-for="LgaId" asp-items="ViewBag.Lgas" class="form-select" id="LgaId"><option value="">Choose...</option></select></div>
+                    <div class="col-12"><label for="photo" class="form-label">Passport photograph</label><input type="file" name="photo" id="photo" accept=".jpg,.jpeg,.png,.webp" class="form-control"/><div class="form-text">JPG, PNG, or WEBP; maximum 5 MB.</div><span class="text-danger">@Html.ValidationMessage("Photo")</span></div>
+                </div>
+                <div class="mt-4"><button type="submit" class="btn btn-success btn-lg">Submit information</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const dob = document.getElementById('DateOfBirth');
+        const age = document.getElementById('ageDisplay');
+        function updateAge() { if (!dob.value) { age.value = ''; return; } const birth = new Date(dob.value + 'T00:00:00'); const today = new Date(); let years = today.getFullYear() - birth.getFullYear(); if (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate())) years--; age.value = years >= 0 ? years : ''; }
+        dob.addEventListener('change', updateAge); updateAge();
+        document.getElementById('StateId').addEventListener('change', async function () { const list = document.getElementById('LgaId'); list.innerHTML = '<option value="">Choose...</option>'; if (!this.value) return; const response = await fetch('@Url.Action("Lgas", "MemberRegistration")/' + this.value); const rows = await response.json(); for (const row of rows) { const option = document.createElement('option'); option.value = row.id; option.textContent = row.name; list.appendChild(option); } });
+    </script>
+}

@@ -1,0 +1,501 @@
+﻿@model ChurchManagementMVC.Models.ExpenditureManagement
+
+@{
+    ViewData["Title"] = "Edit Expenditure";
+
+    var expenditureTypes =
+        ViewBag.ExpenditureTypes as List<ChurchManagementMVC.Models.ExpenditureType>
+        ?? new List<ChurchManagementMVC.Models.ExpenditureType>();
+
+    var paymentMethods =
+        ViewBag.PaymentMethods as List<ChurchManagementMVC.Models.PaymentMethod>
+        ?? new List<ChurchManagementMVC.Models.PaymentMethod>();
+
+    var churchOfficials =
+        ViewBag.ChurchOfficials as List<ChurchManagementMVC.Models.ChurchCommittee>
+        ?? new List<ChurchManagementMVC.Models.ChurchCommittee>();
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-pencil-square me-2"></i>
+                Edit Expenditure
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update the details of this church expenditure.
+            </p>
+        </div>
+
+        <div>
+            <a asp-action="Index"
+               class="btn btn-outline-secondary rounded-3 px-4">
+
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to Expenditures
+
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Expenditure Form -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10 col-lg-11">
+
+            <div class="card shadow-sm border-0 rounded-4">
+
+                <!-- Card Header -->
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-success bg-opacity-10
+                            text-success rounded-circle
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width: 50px; height: 50px;">
+
+                            <i class="bi bi-pencil-square fs-5"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                Expenditure Information
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                Update the expenditure information below.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4">
+
+                    <!-- Validation Summary -->
+                    <div asp-validation-summary="ModelOnly"
+                         class="alert alert-danger border-0 rounded-3 mb-4">
+                    </div>
+
+                    <form asp-action="Edit"
+                          asp-route-id="@Model.ExpenditureId"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               asp-for="ExpenditureId" />
+
+                        <!-- Date + Expenditure Type -->
+                        <div class="row">
+
+                            <!-- Expenditure Date -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="ExpenditureDate"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    Expenditure Date
+
+                                </label>
+
+                                <input asp-for="ExpenditureDate"
+                                       type="date"
+                                       class="form-control form-control-lg rounded-3" />
+
+                                <span asp-validation-for="ExpenditureDate"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Expenditure Type -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="ExpenditureTypeId"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-tags-fill me-1"></i>
+                                    Expenditure Type
+
+                                </label>
+
+                                <select asp-for="ExpenditureTypeId"
+                                        class="form-select form-select-lg rounded-3">
+
+                                    <option value="">
+                                        -- Select Expenditure Type --
+                                    </option>
+
+                                    @foreach (var type in expenditureTypes)
+                                    {
+                                        <option value="@type.ExpenditureTypeId">
+                                            @type.TypeName
+                                        </option>
+                                    }
+
+                                </select>
+
+                                <span asp-validation-for="ExpenditureTypeId"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Description + Amount -->
+                        <div class="row">
+
+                            <!-- Description -->
+                            <div class="col-md-8 mb-4">
+
+                                <label asp-for="Description"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-card-text me-1"></i>
+                                    Description
+
+                                </label>
+
+                                <input asp-for="Description"
+                                       class="form-control form-control-lg rounded-3"
+                                       placeholder="Enter expenditure description" />
+
+                                <span asp-validation-for="Description"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="col-md-4 mb-4">
+
+                                <label asp-for="Amount"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-cash-stack me-1"></i>
+                                    Amount
+
+                                </label>
+
+                                <div class="input-group input-group-lg">
+
+                                    <span class="input-group-text bg-light">
+                                        ₦
+                                    </span>
+
+                                    <input asp-for="Amount"
+                                           type="number"
+                                           step="0.01"
+                                           class="form-control rounded-end-3"
+                                           placeholder="0.00" />
+
+                                </div>
+
+                                <span asp-validation-for="Amount"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Payment Method + Reference -->
+                        <div class="row">
+
+                            <!-- Payment Method -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="PaymentMethodId"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-credit-card-fill me-1"></i>
+                                    Payment Method
+
+                                </label>
+
+                                <select asp-for="PaymentMethodId"
+                                        class="form-select form-select-lg rounded-3">
+
+                                    <option value="">
+                                        -- Select Payment Method --
+                                    </option>
+
+                                    @foreach (var paymentMethod in paymentMethods)
+                                    {
+                                        <option value="@paymentMethod.Id">
+                                            @paymentMethod.Name
+                                        </option>
+                                    }
+
+                                </select>
+
+                                <span asp-validation-for="PaymentMethodId"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                            <!-- Reference Number -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="ReferenceNumber"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-receipt me-1"></i>
+                                    Reference Number
+
+                                </label>
+
+                                <input asp-for="ReferenceNumber"
+                                       class="form-control form-control-lg rounded-3"
+                                       placeholder="Reference number" />
+
+                                <span asp-validation-for="ReferenceNumber"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Payee + Requested By -->
+                        <div class="row">
+
+                            <!-- Payee -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="PayeeName"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-person-check-fill me-1"></i>
+                                    Payee Name
+
+                                </label>
+
+                                <select asp-for="PayeeName"
+                                        class="form-select form-select-lg rounded-3">
+
+                                    <option value="">
+                                        -- Select Payee --
+                                    </option>
+
+                                    @foreach (var official in churchOfficials)
+                                    {
+                                        <option value="@official.MemberName">
+                                            @official.MemberName - @official.PositionName
+                                        </option>
+                                    }
+
+                                </select>
+
+                                <span asp-validation-for="PayeeName"
+                                      class="text-danger small">
+                                </span>
+
+                                <div class="form-text">
+                                    Select a registered Church Committee official.
+                                </div>
+
+                            </div>
+
+                            <!-- Requested By -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="RequestedBy"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-person-fill me-1"></i>
+                                    Requested By
+
+                                </label>
+
+                                <input asp-for="RequestedBy"
+                                       class="form-control form-control-lg rounded-3"
+                                       placeholder="Enter requester's name" />
+
+                                <span asp-validation-for="RequestedBy"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Approved By + Status -->
+                        <div class="row">
+
+                            <!-- Approved By -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="ApprovedBy"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-person-check-fill me-1"></i>
+                                    Approved By
+
+                                </label>
+
+                                <select asp-for="ApprovedBy"
+                                        class="form-select form-select-lg rounded-3">
+
+                                    <option value="">
+                                        -- Select Approving Official --
+                                    </option>
+
+                                    @foreach (var official in churchOfficials)
+                                    {
+                                        <option value="@official.MemberName">
+                                            @official.MemberName - @official.PositionName
+                                        </option>
+                                    }
+
+                                </select>
+
+                                <span asp-validation-for="ApprovedBy"
+                                      class="text-danger small">
+                                </span>
+
+                                <div class="form-text">
+                                    Select the registered official who approved the expenditure.
+                                </div>
+
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6 mb-4">
+
+                                <label asp-for="Status"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-clipboard-check-fill me-1"></i>
+                                    Status
+
+                                </label>
+
+                                <select asp-for="Status"
+                                        class="form-select form-select-lg rounded-3">
+
+                                    <option value="Pending">
+                                        Pending
+                                    </option>
+
+                                    <option value="Approved">
+                                        Approved
+                                    </option>
+
+                                    <option value="Rejected">
+                                        Rejected
+                                    </option>
+
+                                    <option value="Paid">
+                                        Paid
+                                    </option>
+
+                                </select>
+
+                                <span asp-validation-for="Status"
+                                      class="text-danger small">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-4">
+
+                            <label asp-for="Notes"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-journal-text me-1"></i>
+                                Notes
+
+                            </label>
+
+                            <textarea asp-for="Notes"
+                                      class="form-control form-control-lg rounded-3"
+                                      rows="4"
+                                      placeholder="Enter any additional notes..."></textarea>
+
+                            <span asp-validation-for="Notes"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+                        <!-- Information Alert -->
+                        <div class="alert alert-info border-0 rounded-3">
+
+                            <div class="d-flex">
+
+                                <i class="bi bi-info-circle-fill me-2 mt-1"></i>
+
+                                <div>
+
+                                    <strong>Expenditure Information:</strong>
+
+                                    <div class="small mt-1">
+                                        Payee and approving official names are
+                                        selected from the registered Church Committee officials.
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <a asp-action="Index"
+                               class="btn btn-outline-secondary rounded-3 px-4">
+
+                                <i class="bi bi-x-circle me-1"></i>
+                                Cancel
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success rounded-3 px-4 shadow-sm">
+
+                                <i class="bi bi-check-circle-fill me-1"></i>
+                                Update Expenditure
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

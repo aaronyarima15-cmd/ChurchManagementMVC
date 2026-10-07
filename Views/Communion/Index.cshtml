@@ -1,0 +1,625 @@
+﻿@model ChurchManagementMVC.Models.CommunionAttendanceVM
+
+@{
+    ViewData["Title"] = "Communion Participants";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-cup-hot text-success me-2"></i>
+                Communion Participants
+            </h2>
+
+            <p class="text-muted mb-0">
+                Record Holy Communion attendance for members.
+            </p>
+        </div>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
+
+            <i class="bi bi-check-circle me-2"></i>
+
+            @TempData["Success"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show"
+             role="alert">
+
+            <i class="bi bi-exclamation-triangle me-2"></i>
+
+            @TempData["Error"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+
+            <div asp-validation-summary="All"></div>
+
+        </div>
+    }
+
+
+    <form asp-action="Index"
+          method="post"
+          id="communionForm">
+
+        @Html.AntiForgeryToken()
+
+
+        <!-- =====================================================
+             HOLY COMMUNION INFORMATION
+        ====================================================== -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-success text-white py-3">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-cup-hot me-2"></i>
+
+                    Holy Communion Information
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+
+                    <!-- Communion Date -->
+
+                    <div class="col-md-4">
+
+                        <label asp-for="CommunionDate"
+                               class="form-label fw-semibold">
+
+                            Communion Date
+
+                        </label>
+
+                        <input asp-for="CommunionDate"
+                               type="date"
+                               class="form-control" />
+
+                        <span asp-validation-for="CommunionDate"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Minister -->
+
+                    <div class="col-md-4">
+
+                        <label asp-for="Minister"
+                               class="form-label fw-semibold">
+
+                            Minister
+
+                        </label>
+
+                        <input asp-for="Minister"
+                               class="form-control"
+                               placeholder="Enter minister name" />
+
+                        <span asp-validation-for="Minister"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Remarks -->
+
+                    <div class="col-md-4">
+
+                        <label asp-for="Remarks"
+                               class="form-label fw-semibold">
+
+                            Remarks
+
+                        </label>
+
+                        <input asp-for="Remarks"
+                               class="form-control"
+                               placeholder="Optional remarks" />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             COMMUNION PARTICIPANTS
+        ====================================================== -->
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-success text-white d-flex
+                justify-content-between align-items-center">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-people-fill me-2"></i>
+
+                    Communion Participants
+
+                </h5>
+
+                <span class="badge bg-light text-success">
+
+                    @Model.Members.Count Members
+
+                </span>
+
+            </div>
+
+
+            <div class="card-body">
+
+
+                <div class="alert alert-info">
+
+                    <i class="bi bi-info-circle me-2"></i>
+
+                    All members are marked
+                    <strong>Present</strong> by default.
+                    Untick Present or select
+                    <strong>Absent</strong> for members who did not
+                    take Holy Communion.
+
+                </div>
+
+
+                @if (Model.Members.Count == 0)
+                {
+                    <div class="alert alert-warning mb-0">
+
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+
+                        No baptized members with membership card
+                        numbers were found.
+
+                    </div>
+                }
+                else
+                {
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover
+                            table-bordered align-middle mb-0">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th style="width: 50px;">
+                                        #
+                                    </th>
+
+                                    <th>
+                                        Members
+                                    </th>
+
+                                    <th>
+                                        Card Number
+                                    </th>
+
+                                    <th>
+                                        Phone
+                                    </th>
+
+                                    <th>
+                                        Communion Date
+                                    </th>
+
+                                    <th>
+                                        Minister
+                                    </th>
+
+                                    <th class="text-center">
+                                        Present
+                                    </th>
+
+                                    <th class="text-center">
+                                        Absent
+                                    </th>
+
+                                    <th>
+                                        Remarks
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                @for (
+                                    int i = 0;
+                                    i < Model.Members.Count;
+                                    i++)
+                                {
+                                    var member =
+                                        Model.Members[i];
+
+
+                                    <tr>
+
+                                        <!-- Number -->
+
+                                        <td>
+                                            @(i + 1)
+                                        </td>
+
+
+                                        <!-- Member -->
+
+                                        <td>
+
+                                            <input type="hidden"
+                                                   asp-for="Members[i].MemberId" />
+
+                                            <strong>
+                                                @member.MemberName
+                                            </strong>
+
+                                        </td>
+
+
+                                        <!-- Card Number -->
+
+                                        <td>
+
+                                            <span class="badge bg-success">
+
+                                                @member.CardNumber
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Phone -->
+
+                                        <td>
+
+                                            @member.PhoneNumber
+
+                                        </td>
+
+
+                                        <!-- Communion Date -->
+
+                                        <td>
+
+                                            @(Model.CommunionDate
+                                            .ToString("dd/MM/yyyy"))
+
+                                        </td>
+
+
+                                        <!-- Minister -->
+
+                                        <td>
+
+                                            @Model.Minister
+
+                                        </td>
+
+
+                                        <!-- PRESENT -->
+
+                                        <td class="text-center">
+
+                                            <div class="form-check
+                                                d-flex
+                                                justify-content-center">
+
+                                                <input type="checkbox"
+                                                       class="form-check-input present-checkbox"
+                                                       data-index="@i"
+                                                @(member.Status == AttendanceStatus.Present
+                                                    ? "checked"
+                                                    : "") />
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- ABSENT -->
+
+                                        <td class="text-center">
+
+                                            <div class="form-check
+                                                d-flex
+                                                justify-content-center">
+
+                                                <input type="checkbox"
+                                                       class="form-check-input absent-checkbox"
+                                                       data-index="@i"
+                                                @(member.Status == AttendanceStatus.Absent
+                                                    ? "checked"
+                                                    : "") />
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- Hidden Status -->
+
+                                        <input type="hidden"
+                                               asp-for="Members[i].Status"
+                                               class="status-value"
+                                               data-index="@i" />
+
+
+                                        <!-- Remarks -->
+
+                                        <td>
+
+                                            <input asp-for="Members[i].Remarks"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="Optional" />
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- Save Button -->
+
+                    <div class="d-flex justify-content-end mt-4">
+
+                        <button type="submit"
+                                class="btn btn-success px-4">
+
+                            <i class="bi bi-check-circle me-2"></i>
+
+                            Save Communion Attendance
+
+                        </button>
+
+                    </div>
+
+                }
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                const presentCheckboxes =
+                    document.querySelectorAll(
+                        ".present-checkbox"
+                    );
+
+                const absentCheckboxes =
+                    document.querySelectorAll(
+                        ".absent-checkbox"
+                    );
+
+                const statusFields =
+                    document.querySelectorAll(
+                        ".status-value"
+                    );
+
+
+                // =================================================
+                // UPDATE STATUS
+                // =================================================
+
+                function updateStatus(index, status) {
+
+                    const present =
+                        presentCheckboxes[index];
+
+                    const absent =
+                        absentCheckboxes[index];
+
+                    const statusField =
+                        statusFields[index];
+
+
+                    if (!present ||
+                        !absent ||
+                        !statusField) {
+
+                        return;
+                    }
+
+
+                    if (status === "Present") {
+
+                        present.checked = true;
+
+                        absent.checked = false;
+
+                        statusField.value = "Present";
+
+                    }
+                    else {
+
+                        present.checked = false;
+
+                        absent.checked = true;
+
+                        statusField.value = "Absent";
+
+                    }
+
+                }
+
+
+                // =================================================
+                // PRESENT CHECKBOX
+                // =================================================
+
+                presentCheckboxes.forEach(
+                    function(checkbox) {
+
+                        checkbox.addEventListener(
+                            "change",
+                            function() {
+
+                                const index =
+                                    parseInt(
+                                        this.getAttribute(
+                                            "data-index"
+                                        )
+                                    );
+
+
+                                if (this.checked) {
+
+                                    updateStatus(
+                                        index,
+                                        "Present"
+                                    );
+
+                                }
+                                else {
+
+                                    updateStatus(
+                                        index,
+                                        "Absent"
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
+
+
+                // =================================================
+                // ABSENT CHECKBOX
+                // =================================================
+
+                absentCheckboxes.forEach(
+                    function(checkbox) {
+
+                        checkbox.addEventListener(
+                            "change",
+                            function() {
+
+                                const index =
+                                    parseInt(
+                                        this.getAttribute(
+                                            "data-index"
+                                        )
+                                    );
+
+
+                                if (this.checked) {
+
+                                    updateStatus(
+                                        index,
+                                        "Absent"
+                                    );
+
+                                }
+                                else {
+
+                                    updateStatus(
+                                        index,
+                                        "Present"
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    }
+                );
+
+
+                // =================================================
+                // DEFAULT ALL MEMBERS TO PRESENT
+                // =================================================
+
+                statusFields.forEach(
+                    function(field, index) {
+
+                        updateStatus(
+                            index,
+                            "Present"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+}

@@ -1,0 +1,128 @@
+﻿@model ChurchManagementMVC.Models.Position
+
+@{
+    ViewData["Title"] = "Edit Position";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-pencil-square me-2"></i>
+            Edit Position
+        </h2>
+
+        <p class="text-muted mb-0">
+            Update the church committee position.
+        </p>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body p-4">
+
+            <form asp-action="Edit"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <!-- Hidden ID -->
+                <input type="hidden"
+                       asp-for="Id" />
+
+
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger"
+                     role="alert">
+                </div>
+
+
+                <!-- Position Name -->
+                <div class="mb-4">
+
+                    <label asp-for="PositionName"
+                           class="form-label fw-semibold">
+
+                        <i class="bi bi-award me-2"></i>
+                        Position Name
+
+                    </label>
+
+                    <input asp-for="PositionName"
+                           class="form-control form-control-lg rounded-3"
+                           placeholder="Enter position name"
+                           autocomplete="off" />
+
+                    <span asp-validation-for="PositionName"
+                          class="text-danger">
+                    </span>
+
+                    <div class="form-text">
+                        Update the name of this church committee position.
+                    </div>
+
+                </div>
+
+
+                <!-- Date Created -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+
+                        <i class="bi bi-calendar3 me-2"></i>
+                        Date Created
+
+                    </label>
+
+                    <input type="text"
+                           class="form-control form-control-lg rounded-3 bg-light"
+                           value="@Model.DateCreated.ToString("dd MMMM yyyy")"
+                           readonly />
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-success rounded-3 px-4">
+
+                        <i class="bi bi-check-circle me-2"></i>
+                        Save Changes
+
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary rounded-3 px-4">
+
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}
